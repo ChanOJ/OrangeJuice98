@@ -2,9 +2,9 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "oj98-build",
+      "name": "oj98-site",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "3422", "--directory", "build"],
+      "runtimeArgs": ["-m", "http.server", "3422", "--directory", "site"],
       "port": 3422
     }
   ]
