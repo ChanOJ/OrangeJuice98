@@ -1,0 +1,42 @@
+# Paths relative to site/. Delete (do not upload) before publication.
+# P0 - credentials / secrets
+news/logins.txt
+news/logins.shtml
+news/add.htm
+news/add_inc.shtml
+news/adde.shtml
+news/addf.shtml
+news/disp_cur.shtml
+news/disp_old.shtml
+news/stats.shtml
+handles_/**
+to99_live/add.shtml
+# P0/P1 - server-side code (ASP source, never served raw)
+*.inc
+stats.inc
+keywords.inc
+keywords2.inc
+demos/title.inc
+# P1 - visitor personal data (IPs, hostnames, user agents, free text)
+data/#onliner*.txt
+data/#reverse.txt
+data/#ip_france.txt
+data/#host2country.txt
+data/#countries.txt
+ctw/ricochet.log
+ctw/404.txt
+ctw/404.htm
+# P2 - junk / metadata
+**/.DS_Store
+**/.picasa.ini
+**/*.bak
+**/*.log
+# Optional (decision needed): write-form dead pages
+form_fail.htm
+form_ok.htm
+form_group_ok.htm
+form_handle_ok.htm
+addgroup.htm
+pseudonew.htm
+pseudonew2.htm
+test.htm

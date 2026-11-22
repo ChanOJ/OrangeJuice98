@@ -1,0 +1,5 @@
+ftp://acid2.stack.nl/
+
+New FTP mirror archive !
+Tired of all those different ftpserver to connect to to get the newest releases, Redhound decided some time ago that it would be nice to setup a huge mirror site that would contain all big scene archives. It took a while to set this all up, but now the big threesome are united on one ftpserver :<BR>* The Hornet archive -> /pub/hornet<BR>* The Scene.org archive -> /pub/scene.org<BR>* The Trebel archive -> /pub/trebel<BR><I>(source : comp.sys.ibm.pc.demos)</I>
+chandra

@@ -1,0 +1,5 @@
+ftp://acid2.stack.nl/
+
+Nouveau serveur FTP mirroir !
+Fatigué de tous ces serveurs FTP auxquels ils faut se connecter pour avoir les dernières releases, Redhound a décidé il y a quelques temps que ce serai bien de mettre en place un enorme mirroir FTP qui contiendrai toutes les grosses archives de la scene. Ca a prit du temps a mettre en place, mais maintenant les 3 plus gros y sont :<BR>* The Hornet archive -> /pub/hornet<BR>* The Scene.org archive -> /pub/scene.org<BR>* The Trebel archive -> /pub/trebel<BR><I>(source : comp.sys.ibm.pc.demos)</I>
+chandra

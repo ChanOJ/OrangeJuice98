@@ -1,0 +1,5 @@
+ftp://ftp.hornet.org/pub/demos/goodbye.txt
+_top
+Hornet nous quitte
+La plus mauvaise nouvelle que l'on puisse vous annoncer. La fin d'une Ere, l'Archive Hornet ferme. "Finalement, l'archive va être démantelée le plus tôt possible. Toutes les pages html vont êtres effacées. Le moteur de recherche désactivé. Le répertoire /incoming va être répertorié puis effacé. Tous les sites hébergés vont sur de nouveaux hébergements. Les sites miroirs vont se désolidariser. A ce moment la partie web de l'Hornet Archive n'existera plus."<BR>Orange Juice vous salue, vous tous d'Hornet.
+dryes

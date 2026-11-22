@@ -1,0 +1,5 @@
+http://linuxscn.linuxfr.org/
+_top
+Linux Game Compo
+A game compo will take place on June the 20th on #linuxscn, IrcNet. Random teams made of a musician, a graphist and a coder will have to make a linux game (no size limit) in 6 hours for a given subject. Beginning time and further information will be given on the #linuxscn homepage (cf title link). Mail questions to redpingu@????.
+chandra

@@ -1,0 +1,222 @@
+These are the Official TG97 results brought to you by Wobba/Crusaders
+
+                              TG97 in raw numbers...
+
+(again, corrections had to be made since organizers seem unable to edit
+results files :) - phoenix/hornet
+
+
+ PC DEMO
+
+Points|vote_id
+   983|     14|       CNCD vs. Orange by cncd & orange
+   725|      4|              robotnik by rage
+   705|     15|           Astral Blur by tbl
+   431|      3|               Outside by melon
+   429|      9|               outcast by sublogic
+   378|      5|		       Sand 4 by rectum cauda
+   328|      1|                 M.A.3 by recreation
+   322|     13|                Petrol by aurum
+   312|      7|                jakoob by fudge
+   297|      8|What TG did to KajAnia by kajania
+   187|     10|              delirium by sorrox
+   170|      2|  The Search for Steve by chaotic order
+   144|     11|              Hot Hoff by session
+   107|      6|               Twisted by sublevel 3
+    68|     12|              Freewear by phoenix
+
+
+ AMiGA DEMO
+
+Points|vote_id
+  1752|     17| 		   Captured Dreams by the black lotus
+   652|      7|                   Exit Planet Dust by c-lous + artwork
+   364|     10|                    Deus Ex Machina by limited edition
+   349|      4|                            Eclipse by triumph
+   307|      2|                             Energy by gods
+   247|     16|          Black Hair Tounge Disease by ward
+   221|     12|                		   Abiotic by ephidrena
+   220|      1|                       Needle Freak by massive/rape
+   220|      3|                            assfart by apathy
+   214|     13|                              Snack by spaceballs
+   209|      6|                     espen bredesen by orange
+   176|     14|                             .plong by contraz
+   117|      5|                         PowerDeath by procyon
+   115|     11|                         Hale-bop-p by elefantklubben
+   105|      8|                            PcPuke! by procyon
+    65|     15|                   Magic Milktunnel by donut fetish
+    64|      9|                      Find yourself by trsi^fairlight
+
+
+ WiLD
+
+Points|vote_id
+  1557|      3|Intel Outside v.1.01.875.1RC2 Build 1351 by limited edition
+   642|      8|                            The Wobblers by triumph
+   467|      7|                             Firestarter by procyon
+   373|      5|                               Apparatus by coma
+   318|     45|                               Razta-Man by softology
+   270|      1|                              con-fuused by tpolm
+   249|      4|                              mild chill by coma
+   229|     35|                              Das A-Team by contraz
+   221|     18|                               lobodance by fascination
+   212|     21|                             Motorsagaen by tpf
+   166|     42|                                   Baeae by phobic
+   163|     34|            		   Totalt Hindu by rectum cauda
+   162|     33|                Kontraster 2 - en ny giv by the lost souls
+   151|     11|                          Give Me Motion by vision 3
+   149|      9|          Hamar domkirke i middelalderen by intellus
+   121|     14|                          World of Wodka by trsi^fairlight
+   119|      6|                                Toytrain by ?
+   118|     29|                           Twisted Minds by ?
+   118|     10|                               Time Wave by vision 3
+   112|     16|                             Ship & Gill by trinity/atc
+   106|      2|    		     Txt2Dir converter! by XCene/tpf^maak
+   103|     31|                              Kill Gates by probity
+    98|     26|                               Hale-Bopp by massive
+    96|     24|                                rOACHING by tundra
+    83|     15|                            Super TutTut by talent
+    79|     13|                              Pure BASIC by ?
+    76|     32|                      It came from Pluto by elq
+    54|     30|                     Nettverk & Nettherk by isabella
+    51|     36|                        cHRIZ iN dA hOOD by apt,e!,ist,msv,rpe
+    50|     43|                               Wild 3d!! by cmy,sys-x32
+    48|     41|                             The Revenge by ephidrena
+    48|     19|                           m o n d i a l by peachnut dev.
+    39|     17|                           TG97 Mainlogo by ?
+    35|     39|                              Odd Gunnar by ephidrena
+    34|     37|                              Giraffdemo by team giraff
+    32|     22|                        VTUN RAiSiO CiTY by essex
+    27|     23|                                  broken by coma
+    26|     25|                            Shit Happens by ems-design
+    25|     28|                       hippleifhurapleif by ?
+    23|     38|                              16 FINGERS by tracktoe
+    22|     27|                                     JFK by ems-design
+    14|     20|                                THE DEMO by p!n productions
+     7|     44|                             MultiStudio by ?
+     0|     40|                             another TRY by darklite
+
+
+ PC/AMiGA 64K iNTRO
+
+Points|vote_id
+   711|     11|                            gene by fudGe
+   574|      3|             arabi from da bronx by tpolm
+   565|      8|                         Face it by jello
+   497|      2|           		  Ocean by rectum cauda
+   372|      9|          	         sKOGEN by rectum cauda
+   343|     16|                 Amiga 64k Intro by Da Jormas
+   341|      4|                 Prove You Wrong by bandwagon
+   331|     13|                           Onion by yodel
+   326|     15|                    More or Less by nocturnal
+   215|      1|                            Dalt by mist
+   200|      7|                       Dual 4kb! by tbl
+   190|     10| monochrome life in the nineties by tundra
+   190|      6|                        Nocturne by ?
+   133|     12|                     Quick Lunch by extatic
+   104|      5|                            RoBo by ?
+   103|     17|                         ability by vector
+    97|     14|                         DoorMat by ?
+
+
+ MUSiC
+
+Points|vote_id
+   655|      5|     Plastic Nudity by jisemdu of proxima/tpolm
+   629|      3|   Sunset in Africa by silencer of sotu
+   342|      4|          Im Coming by melwyn of acid rain
+   337|     25|        Its a dream by bullet of thefriedchickens
+   314|     14|     clean air (xm) by orbiter of dna
+   279|     27|    Virtual Reality by basic energy of tec & cc
+   278|      2| Carbondioxide 7-11 by vinnie of spaceballs
+   273|     20|      Im not bad... by phelix of yodel
+   265|     12|      Frozen Dreams by sphair of tga
+   265|      7|       blue bay bar by zauron of idx.maak.tpolm.pimp
+   243|     10|            Tolkien by wain of loop
+   233|      1|     westcoastdaria by poison of goto10
+   221|     15|    infront Reality by dr.tassel of laban
+   219|      8|             Stativ by scott of spaceballs
+   213|      9|             Stoned by martyn (kalasbux) of pooh
+   177|      6|      PERSIAN ANGEL by wasted of ?
+   176|     13|   korean fantasies by boo of talent
+   174|     19|    Heard It Before by epithal of limited edition
+   167|     23|          Rivendell by skize of limited edition
+   167|     18|       Dream Access by silver of net gen./tundra/subkult
+   160|     28|     tHE Experience by ?
+   151|     22|Physical Attraction by psycho of session
+   135|     16|      Gettin Groovy by hackman of image dreams
+   133|     26|           Wit_Down by jason of crusaders
+   126|     24|           Optimize by clone of spin
+   121|     17|             Norlyn by yolk of cncd
+   120|     11|         Highlander by radiance of massive
+    42|     21|     The Horserace! by kezoomer of the lost souls
+
+
+ GRAPHiCS
+
+Points|vote_id
+   795|      6| Angelic Particles by louie of tbl
+   591|     12|    Sweet and sour by tmk of inf
+   546|      3|             Katka by saffron of the black lotus
+   442|      1|       Triceratops by typhoon of gods
+   406|      2|         Cybergirl by response of darklite
+   366|      8|           saaolla by mike of byterapers
+   364|     20|     tjo bing beng by sunday of proxima
+   356|     13| Heavenly creature by melmoth of ?
+   273|     19|             Cosmo by stoney of hidrena
+   268|     17|       Ace Stanley by skize of limited edition
+   236|     10|          Hashrami by ?
+   200|      9|            Smerte by ?
+   197|     18|      The Dreaming by pix of subspace
+   174|     15|    Fantasy Flower by loaderror of ephidrena&dnf
+   165|      5|       philterfrog by phelix of yodel
+   160|     14|            jakoob by echo of fudGe
+   154|     16|      Nightowl.gif by boo of talent
+   145|     11|            Troett by ?
+   127|      7|             Steel by jerry of rebels
+    83|      4|             GLORY by wain of loop
+
+
+PC/Amiga Fast Intro
+
+Points|vote_id
+   900|      2|          Trekant med Eli Rygg. Igjen. by sorrox
+   604|      8|                  kameruun norgesnack! by rectum cauda
+   427|      3|                              FoodYoyo by rectum cauda
+   381|      4|            lutefisk .. loff til ole 2 by portablephun
+   266|     11|                                   Mat by n/a
+   237|      9|                                  Food by -
+   210|      6|                           Norge & Mat by dureks
+   204|      1|                          Food Anarchy by darklite
+   195|      7|                                   Mat by beam
+   165|      5|                                 Norje by braindead
+   128|     10|                              FastDemo by n/a
+
+
+ PC 4K iNTRO
+
+Points|vote_id
+   605|      3|                     Bubble by cortex/index
+   489|      5|			     Humle by piffi/rectum cauda
+   395|      1|                       Fade by zien
+   361|      2|                    Bumptro by ollie/kalvados
+   325|      7|                   born fat by bizarre/anakata
+   294|      4|                    pOOHWER by malkavian/pooh
+   283|      8|                        PGP by zimmerman??
+   274|      6|                      float by bizarre/anakata
+   187|      9|                          a by bizarre/anakata
+
+
+ PC TEXTDEMO
+
+Points|vote_id
+   978|      2| TEXTATIC by TEC
+   969|      6|    M.A.3 by recreation
+   887|      3|     TEXT by $volkraq/gollum & neon/speznatz
+   647|      4|  BAMBINO by bamboosh
+   563|      1|    Kube? by p!n
+   324|      5|Iku Seven by acid rain
+
+
+
+          Computing by SEO - See you at Summer Encounter in Denmark!

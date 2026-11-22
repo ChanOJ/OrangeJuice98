@@ -1,0 +1,5 @@
+../pc_megademo_project.htm
+
+PC Megademo Project
+The goal of this project is to realize an ST-like megademo on PC. More precisely, there is a "menu" (which looks like a demo effect) and the users selects the "part" he wants to see. Each of theses parts is written by a separate demo group. Any group can participate by writing a part. The goal is not to write parts looking like ST effects but powerful PC ones. This is, IMHO, a really interesting project. Many groups seem to be interested in that. <B>Click on the title to get all the information !!!</B>
+chandra

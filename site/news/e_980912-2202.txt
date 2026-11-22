@@ -1,0 +1,5 @@
+http://rts-party.imag.fr/resultats.htm
+_top
+RTS - The results
+Here are the RTS party results !<BR>It was held in France near Grenoble (5-7 september).
+dryes

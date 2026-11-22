@@ -1,0 +1,5 @@
+http://linuxscn.linuxfr.org/
+_top
+Linux Game Compo
+Il y aura une fast game compo le 20 juin sur #linuxscn, Ircnet. Des équipes formées (gfx/zic/code sous linux) devront faire un jeu (pas de limite de taille) en 6 heures sur un thème donné. Le temps de début et d'autres information seront données sur la page de #linuxscn (cf le lien du titre). Mailer vos questions à redpingu@????.
+chandra

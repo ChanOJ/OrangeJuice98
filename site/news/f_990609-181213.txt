@@ -1,0 +1,5 @@
+http://www.epita.fr/~duret_g/heroes.html
+_top
+Realtech & Olympus
+Et non, ils ne sont pas morts ! =) D'ailleurs ils ont enfin trouvé le temps de releaser un jeu fait il y a un an. Mais laissons la parole à Pollux :<BR>Heroes, une sorte de Nibbles ameliore (pleins d'options, de graphismes, de musiques, de niveaux - et un editeur de niveau) developpe par {Guen,Tnk,Alexel}/RealTech et moi-meme (pollux/Olympus) est dispo. Le jeu tourne sous DOS (avec EOS, et Midas) et est gratuit. Heroes etait fini depuis presque un an deja, mais c'est seulement maintenant que l'on prend le temps de le distribuer.
+chandra
