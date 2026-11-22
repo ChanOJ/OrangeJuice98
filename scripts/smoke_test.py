@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check that the public site serves the files of site/ over HTTPS.
 
-Fetches the root URL and every page of site/ (*.htm, *.html, *.shtml) and
+Fetches (in parallel) the root URL and every page of site/ (*.htm, *.html, *.shtml) and
 compares each body with the repository copy. Retries for a while, since a
 deployment or purge takes some time to reach every CDN edge. No secret needed.
 """
@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -18,6 +19,7 @@ import bunny
 
 ATTEMPTS = 6
 DELAY = 20  # seconds between attempts
+WORKERS = 16  # parallel requests: the site has ~1500 pages
 PAGES = ("*.htm", "*.html", "*.shtml")
 INDEX = ("index.html", "index.htm")
 
@@ -28,7 +30,7 @@ def fetch(url: str) -> tuple[int, bytes]:
         with urllib.request.urlopen(req, timeout=30) as r:
             return r.status, r.read()
     except urllib.error.HTTPError as e:
-        return e.code, b""
+        return e.code, e.read()
     except OSError as e:
         return 0, str(e).encode()
 
@@ -38,12 +40,18 @@ def check(base: str) -> list[str]:
     pages = sorted({p for pat in PAGES for p in bunny.SITE_DIR.rglob(pat)})
     index = next((bunny.SITE_DIR / i for i in INDEX if (bunny.SITE_DIR / i).is_file()), None)
     targets = [("/", index)] + [("/" + p.relative_to(bunny.SITE_DIR).as_posix(), p) for p in pages]
-    for path, local in targets:
+
+    def verify(target: tuple[str, object]) -> str | None:
+        path, local = target
         status, body = fetch(base + urllib.parse.quote(path))
         if status != 200:
-            errors.append(f"{path}: HTTP {status}")
-        elif local is not None and body != local.read_bytes():
-            errors.append(f"{path}: content differs from site/{local.relative_to(bunny.SITE_DIR)}")
+            return f"{path}: HTTP {status}"
+        if local is not None and body != local.read_bytes():
+            return f"{path}: content differs from site/{local.relative_to(bunny.SITE_DIR)}"
+        return None
+
+    with ThreadPoolExecutor(WORKERS) as pool:
+        errors += [e for e in pool.map(verify, targets) if e]
     errors += check_hardening(base)
     return errors
 
@@ -61,13 +69,14 @@ def check_hardening(base: str) -> list[str]:
     except OSError as e:
         errors.append(f"POST /: {e}")
     try:
-        with urllib.request.urlopen(urllib.request.Request(base + "/", headers={"User-Agent": "smoke-test"}), timeout=30) as r:
+        # The charset header comes from a file-extension rule: "/" has no extension, so check a page.
+        with urllib.request.urlopen(urllib.request.Request(base + "/index.html", headers={"User-Agent": "smoke-test"}), timeout=30) as r:
             h = {k.lower(): v for k, v in r.headers.items()}
             for name in ("content-security-policy", "x-content-type-options", "x-frame-options", "referrer-policy", "cross-origin-opener-policy"):
                 if name not in h:
-                    errors.append(f"/: missing header {name}")
+                    errors.append(f"/index.html: missing header {name}")
             if "iso-8859-1" not in h.get("content-type", "").lower():
-                errors.append(f"/: Content-Type {h.get('content-type')!r} lacks charset iso-8859-1")
+                errors.append(f"/index.html: Content-Type {h.get('content-type')!r} lacks charset iso-8859-1")
     except OSError as e:
         errors.append(f"/: {e}")
     status, body = fetch(base + "/no-such-page-404-check.htm")
