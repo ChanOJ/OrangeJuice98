@@ -41,7 +41,7 @@ DNS is not managed here: the hostname is a CNAME to `<pull zone>.b-cdn.net` at I
   days, purged on each deployment.
 - Archives (`rar zip mdz mts mid`): `application/octet-stream` + `Content-Disposition: attachment`.
 - COOP/CORP `same-origin`. Search engines are allowed (no `X-Robots-Tag`, no `robots.txt`).
-- CI (deploy workflow), before upload: excluded-paths check, `scripts/verify_build.py site` and a ClamAV scan of `site/`.
+- CI (deploy workflow), before upload: excluded-paths check, `scripts/verify_build.py --build site` and a ClamAV scan of `site/`.
 - Cookies are stripped before the origin; TLS "Compatible"; forced HTTPS.
 - Custom 404: `hosting/404.html` (`not_found_page` in `site.json`).
 
