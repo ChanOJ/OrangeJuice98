@@ -44,7 +44,7 @@ jobs:
         run: python3 scripts/check_excludes.py
 
       - name: Verify the site (no secrets, ASP or forms left)
-        run: python3 scripts/verify_build.py site
+        run: python3 scripts/verify_build.py --build site
 
       - name: Malware scan (ClamAV)
         run: |
