@@ -1,0 +1,28 @@
+<HTML><HEAD>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<TITLE>Visualisation de l'image</TITLE>
+</HEAD>
+
+<BODY TEXT="#4080FF" BGCOLOR="#000000">
+
+<SCRIPT language="JavaScript">
+<!--
+function GetCookie()
+{
+var pospv = document.cookie.indexOf(';',0);
+if (pospv>4) 
+  return document.cookie.substring(0,pospv);
+else return document.cookie;
+}
+{
+document.write("<center><br><A HREF=\"javascript:history.back()\">");
+document.write("<IMG src=\""+GetCookie()+"\" BORDER=0>");
+document.writeln("</A></center>");
+var exp = new Date();
+document.cookie=document.cookie+"; expires="+exp.toGMTString();
+}
+// -->
+</SCRIPT>
+
+</BODY>
+</HTML>

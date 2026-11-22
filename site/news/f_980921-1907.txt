@@ -1,0 +1,5 @@
+http://www.inforoute.capway.com/brunet3/main.html
+_top
+Panard Vision SDK DJGPP
+Codé par Olivier Brunet, "Panard Vision" est un Moteur 3D temps réel complet, portable et gratuit (pour une utilisation non commerciale) dédié a un rendu rapide et de très bonne qualité sous Win32, Dos et Linux. Seul le rendu soft est supporté avec DJGPP (par d'accélération materielle). Un patch pour DirectX 6 est disponible.
+dryes

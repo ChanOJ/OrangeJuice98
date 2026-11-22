@@ -1,0 +1,5 @@
+../handles/handle_a.htm
+
+La liste des pseudos
+Des drapeaux ont été ajoutés aux listes alphabétiques. Un grand <FONT size="+1">merci</FONT> a Zone / Psykotrope pour les gfx ! :-)
+chandra

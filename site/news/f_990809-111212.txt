@@ -1,0 +1,5 @@
+ftp://ftp.scene.org/incoming/ASM99/asm99results.txt
+_top
+ASM99 resultats et prods
+ftp://ftp.scene.org/incoming/ASM99/ pour toutes les productions et ftp://ftp.scene.org/incoming/ASM99/asm99results.txt pour les resultats.
+dryes

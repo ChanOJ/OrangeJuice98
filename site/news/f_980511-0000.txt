@@ -1,0 +1,5 @@
+../pc_megademo_project.htm
+
+PC Megademo Project
+Le but de ce projet est de réaliser une megademo dans le style ST, mais sur PC. Plus précisemment il s'agirait d'un menu (qui serai un effet "demo") à partir duquel l'utilisateur pourrait choisir la partie qu'il veut voir. Chacune de ces parties serait écrite par un groupe différent. Le but n'est pas de faire des effets ST, mais au contraire d'utiliser au maximum les possibilités du PC. Je pense que c'est un projet super intéressant et pas mal de groupes semblent êtres effectivement interessés. <B>Clique sur le titre pour obtenir toutes les infos !!!</B>
+chandra

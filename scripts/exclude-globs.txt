@@ -1,0 +1,13 @@
+# Files that must NOT be published (relative to site/; no '/' = basename anywhere; '*' crosses '/').
+# Read by scripts/statify.py together with docs/exclude-globs.txt (security audit) when present.
+# Never published: private logs, credentials, visitor data, OS junk. ASP sources (*.shtml, *.inc)
+# are never copied either: they are rendered to .html (see docs/data-model.md).
+
+.DS_Store
+Thumbs.db
+.picasa.ini
+*.log
+# visitor data of the "onliner" and statistics (IPs, hostnames, user agents)
+data/#*
+# newswriters' credentials (scrambled passwords) and e-mails
+news/logins.txt

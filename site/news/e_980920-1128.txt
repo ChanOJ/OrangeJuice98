@@ -1,0 +1,5 @@
+http://www.inforoute.capway.com/brunet3/main.html
+_top
+Panard Vision SDK DJGPP Released
+Coded by Olivier Brunet, "Panard Vision" is a full featured free (for non commercial use) portable Realtime 3D engine allowing for high speed/quality rendering on Win32,Dos, Linux platforms. Only software rendering is supported with DJGPP (no hardware drivers). Patch for Dirext 6 is available.
+dryes

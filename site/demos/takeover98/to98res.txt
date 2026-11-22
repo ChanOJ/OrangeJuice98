@@ -1,0 +1,211 @@
+                        _______     Ò
+                   _____\__   /_____:______  _________
+     - ____________\_     /   \_    |    _/__\  __   /__ -----------------
+       \_            _  _//   _|    ½____|___  _____/ _/ t a k e o v e r 98
+    --- Ó----|    |--\________\|____:      _| -½      | -------------- -- -
+          -  -----¦ ::   ___________|______\/_________|___ slc Ò
+       ::.. .           _\   _    _/____    _ __\  __    /_____:_______
+             eindhoven, |    |    ||    |-----Ö    _____/ _/   ._     /
+        the auditorium, | .._|    |     |     |    |      |     _    /____
+     15/16/17 may/1998! |_:_______|_    |     |_   |     _|     |       _//
+    . ....................:        /__________|/_________\------|_______l
+
+
+---- Takeover'98 - the final results ------------------------------------------
+
+  Here are the final competition results. But first we'd like to make some
+  remarks:
+
+  1) We made a big mistake when calculating the results for the PC demo
+     competition. At the party we announced that Analogue & TBL got second,
+     but shortly after the ending ceremony we found out that it was actually
+     Kontvlokken Posse who should have won the second prize. Now we had to
+     pay for the second prize twice :-( Please don't forget to ask the guys
+     from Analogue and TBL for a drink whenever you meet them, because they
+     sure do have the money to pay for it now ;-) Ofcourse we'd like to send
+     our apologies to the guys from Kontvlokken Posse because they missed the
+     chance to get on stage during the prize ceremony due to our mistake.
+
+  2) During the music competition the song "Beyond the Edge" by Digistorm
+     wasn't played correctly, which might have cost him some votes. Please
+     keep this in mind before judging his entry by its final placement.
+
+  3) Unfortunately we lost the results for the surprise music competition.
+
+  Finaly, we'd like to thank all people that showed up at Takeover'98 for
+  creating the great atmosphere during the party. We know it's not a very
+  original remark, but really, we couldn't have done it without you and
+  we're looking forward to see you next year!
+  
+
+       The organizers.
+
+  
+---- PC demo competition ------------------------------------------------------
+
+       Place    Title                    Group                     Points     
+   
+          1.    Memories                 Superstition                428          
+          2.    Soepkip 3                Kontvlokken Posse           273
+          3.    Delirious 3              Image!                      253
+          4.    Gamma State              Twilight Connection         218     
+          5.    Insanity                 Paranoid Productions        194
+          6.    Psychodelic              Twelve & RBi                193
+          7.    Flush!                   Analogue & TBL              172
+          8.    Immortality              The Solar Group             145
+          9.    Coffee                   Inside                      134
+
+       
+---- PC 64k intro competition -------------------------------------------------
+
+       Place    Title                    Group                     Points
+
+          1.    Clone meets clone        Acme                        395
+          2.    Mindflow                 Analogue                    257
+          3.    HeadrusH                 Jello                       224
+          4.    Poison                   Emotive                     209
+          5.    Reflex                   Subsonic                    189
+          6.    Shoarma                  Kibosh                      149
+   
+   
+---- PC 4k intro competition --------------------------------------------------
+
+       Place    Title                    Coder / Group             Points
+
+          1.    Purple Dreams            The Whatcher / TUHB         131
+
+
+---- PC hardware accelerated 3D demo competition ------------------------------
+    
+       Place    Title                    Coder / Group             Points
+  
+          1.    Shortcut                 Buckshag / MSTGD            211
+       
+
+---- Java demo competition ----------------------------------------------------
+
+       Place    Title                    Group                     Points
+
+          1.    Flow                     Digital Nerds               230
+          2.    Coal                     Otak Inc.                   167
+          3.    Antiblur                 Antiblur                    127
+
+
+---- Music competition --------------------------------------------------------
+
+       Place    Title                    Artist / Group            Points
+
+          1.    Horny                    Vic / Acme                  147
+          2.    Traveller                Kork / Trepaan              128
+          3.    Zwoel (Ultimate Swee~    No-XS / Oxyron              118  
+          4.    Forgotten City           Scorpik / Level-D           111
+          5.    Lost in time             Screes / Aeon/RBi           107
+          6.    Blue Clouds              Workbench / Level-D          96
+          7.    The Dreamlands           Cyrex / Logic                91
+          8.    Beyond the Edge          Digistorm / Logic            90
+          9.    Electric Force           Ionized / Cryogenic          85
+         10.    Zinloos                  Red Dwarf                    80
+         11.    Nanites                  Kraiden and Quoz             59
+         12.    Innersides               Hultink en den Riet          50
+  
+
+---- House competition --------------------------------------------------------
+
+       Place    Title                    Artist / Group            Points
+
+          1.    Unknown thought          Screes / Aeon/RBi           116 
+          2.    Is there life on Mars?   Dr. Schie-fing              103
+          3.    Club delight             Dynamix / Destiny            98
+          4.    Spacey                   Jay / Aeon/RBi               93
+          5.    Parallel                 Lluvia / Ribbon              92
+          6.    The first chapter        Neophite / Aeon/RBi          76
+          7.    Frognation               The Limb / Kothoga           63
+          8.    Spraycap                 Booga / Oralix               62
+          9.    Last man in India        Infant                       61    
+         10.    1999 Escalation          No-XS / Oxyron               59
+         11.    Level 6                  Weedkiller                   52
+         12.    Goo'nam                  Traven / Syndrome            48
+         13.    2 Wack                   Singa / AAA                  39
+         14.    Hard like a criminal     Mordack / BBR                31
+         15.    Sweet Love               Jape / Total Eclips          21
+
+
+---- Handdrawn graphics competition -------------------------------------------
+
+       Place    Title                    Artist / Group            Points
+
+          1.    Teardrop                 Made / Bomb                 193 
+          2.    Vamp                     Kirk                        161
+          3.    Hypnotease               Mirage                      154
+          4.    Ukko                     Necro                       132 
+          5.    Fall thru deep           Stile9                      104            
+          6.    Mango                    Greenpix / Level-D           94
+          7.    Fly with me              Wain/Piro / Jello            91
+          8.    2 Hours                  3D Addict                    90
+          9.    Condom                   Cronix                       85
+         10.    Dragon                   FVision                      74
+         11.    Da Vie                   Jolly                        70
+         12.    Coolworld                Suave                        59
+         13.    Lik me                   Greftek / TUHB               53
+         14.    Goeber                   Goeber                       45
+         15.    Coyote                   Coyote                       44
+ 
+
+---- Raytrace graphics competition --------------------------------------------
+
+       Place    Title                    Artist / Group            Points
+         
+          1.    Moustik                  Boz / Bomb                  168
+          2.    Witchcraft               Calimero / Superstition     160
+          3.    Crazy Isle               Malvern / New Order         143
+          4.    Book                     Virtual Vexation / LM       100
+          5.    Incoming                 Graftek / TUHB               98
+          6.    Cherubs                  Deep / Air                   92
+          7.    Oldtimer                 Exception                    86
+          8.    Bekkukkukkurk            mSW / Save our Souls         78
+          9.    Computers in differe~    Druid / The Solar Group      58
+ 
+
+---- Ansi/ascii competition ---------------------------------------------------
+
+       Place    Title                    Artist / Group            Points
+ 
+          1.    Take'98                  GeC / GIVE Productions       64
+          2.    Takeover                 Timeless                     63
+          3.    Party of the devil?!     Censored / Ecolove           38
+          4.    Dexter                   Delusion                     36
+
+
+---- Surprise coding competition ----------------------------------------------
+
+       Place    Title                    Coder / Group             Points
+
+          1.    Deep Blue                Beldin & Malvern / NO        73
+          2.    Surprise                 Rob                          71
+          3.    Jizzing Clown            Jace / TBL                   62
+          4.    Zooi.com                 Cypher / Image!              56
+
+
+---- Surprise music competition -----------------------------------------------
+
+       Place    Title                    Artist / Group            Points
+
+          ?.    Windhoos Weer!!          Neotraxx / Aeon/RBi           ?
+          ?.    Uu en ei                 Kraiden e.a.		       ?
+          ?.    Sjaak is een clown       Avalance e.a.                 ?
+          ?.    Zwerver                  MSW                           ?
+          ?.    In den beginne           Job                           ?
+
+
+---- Surprise graphics competition --------------------------------------------
+
+       Place    Title                    Artist / Group            Points
+
+          1.    Billy da Clown           Jace / TBL                   65
+          2.    De pruik                 Feroc / The Blimp            58
+          3.    Jedi                     Jedi                         55
+          4.    Cakeward Ho!             Dman / Backspaze             50
+          5.    106                      Staartje / Impulse           47
+          6.    Shoot it!                Cosmic Trance / Fusion       35
+          7.    Wonko de Clown           NoRulez                      20   
+

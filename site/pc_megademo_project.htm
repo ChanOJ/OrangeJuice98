@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Orange Juice (http://ojuice.citeweb.net) - Article - Oric</title>
+<SCRIPT language="JavaScript"><!--
+if(top==self)
+{
+  var URL = unescape(window.location.pathname);
+  location.href=(confirm("OK for English version of Orange Juice,\nCANCEL for the French one")?"e":"f") + "/frames.htm?" + URL;
+}
+//--></SCRIPT>
+</head>
+
+<body bgcolor="#000000" text="#FFFFFF" link="#FF8040" vlink="#FF8040" alink="#FF8040">
+
+<table border="0" cellpadding="0" cellspacing="0" width="630">
+  <tr>
+    <td colspan="4">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="10">&nbsp;</td>
+    <td valign="top" width="400"><font size="2" face="Verdana">
+	<P><FONT size="5" color="#FF8040"><B>PC Mega Demo Project <FONT size="1">(v0.03e)</FONT></B></FONT></P>
+	<P><FONT size="2" color="#FF8040"><B>What is this about ?</B></FONT></P>
+	<P>The goal of this project is to realize an ST-like megademo on PC.
+	More precisely, there is a "menu" (which looks like a demo effect) and
+	the users selects the "part" he wants to see. Each of theses parts is written
+	by a separate demo group. Any group can participate by writing a part.<BR><BR>
+	The goal is not to write parts looking like ST effects but powerful PC
+	ones. Of course, "smiley" parts will be accepted, though. A part is <U>not</U> a
+	demo but a technical "screen" containing as many effects as possible. You can
+	for example mix 2D and 3D effects or anything you want. No between-effects
+	design, no sound synchronization, only an effect that can loop until the user
+	presses a key. Then, the menu is launched again and let's go for another part !
+	Atari ST Megademo parts worked like that.<BR><BR>
+	Now, I must tell you that you can do <U>all you want</U>. If you want to put multi-part, with between-effects...
+	We want you to participate in this megademo, so you are free!</P>
+
+	<P><FONT size="2" color="#FF8040"><B>What will happen ?</B></FONT></P>
+	<P>In a first step I'll collect the name of groups interested in the
+	project, wether it is in order to write a part, the main menu, modules,
+	graphics or anything else. Just send me a mail (address is at bottom of this
+	text). You must subscribe to the megademo mailing list if you want to know all
+	news about specifications. All messages must pass by the mailing list. To
+	subscribe, just go to this web page: www.onelist.com/subscribe.cgi/megademo
+	Register you and that's all. You could receive all old mails that are sent
+	before your registration.<BR><BR>
+	Meanwhile, Xann and me will develop the common library routines. They will
+	be modified as decisions are taken by everybody. All comments and ideas will
+	be welcome.  You can already start writing a part, but we would prefer you
+	wait for things to be more fixed and everybody is ok.<BR><BR>
+	After the Wired (mid-july), serious things will start. Coders will be able
+	to start writing their part because debugging functions will be available.<BR><BR>
+	The goal is to finish all parts before the end of the summer holidays
+	(about the end of september will be cool :) ).</P>
+
+	<P><FONT size="2" color="#FF8040"><B>Things that remain to do !</B></FONT></P>
+	<P>First, we must write a WEB page with links on texts like this one
+	and informations about the library routines for coders, together with the
+	library itself. We are looking for a designer to make the page attractive...
+	It would also be better if the page was located on a well known demo page.<BR><BR>
+	We would also like to create a mailing-list for off-line discussions
+	about the project. For that we need a server that accepts free creation of a
+	new list.</P>
+
+	<P><FONT size="2" color="#FF8040"><B>For coders !</B></FONT></P>
+	<P>Programming constraints may be modified depending on future discussions.<BR><BR>
+	<UL>
+        <LI>OS would be DOS (try to imagine it is an OS)
+	<LI>language would be Watcom C
+	<LI>common library routines will be used (memory/file/video/sound management)
+	<LI>perhaps common PictureFileReader could be cool. no?
+	<LI>Files will be compressed, packed and crypted in the final lib version. So
+	don't waste your time to code .PNG reader library, uncompressed .BMP
+	format will be enough, .RAW format too!
+	<LI>video modes would be limited. We have to decide which modes are the best.
+	I would like to have fewer modes as possible. around 4 modes will be cool:
+	lowres-lowcolor, lowres-highcolor, highres-lowcolor, higthres-hightcolor
+	<LI>sound management will probably be done using FreddyV's usmplayer
+	<LI>datas part size will be limited to 500KB/1MB depending on part number
+	<LI>you don't have to give us the sources, but only one or several .OBJ file(s)
+	<LI>the full demo will consist of one .EXE file (containing all the .OBJ ones)
+	and one packed archive file (containing all data files) for each part.
+	This will make possible to look at some parts even if some data files
+	are corrupt or missing.
+	Each group will send one or several .OBJ file(s) together with a .H
+	file containing the prototype of the main function to call. There are 2 main
+	rules to follow in order to make possible the linking of all parts :
+	<LI>declare as "static" as many global objects (variables, functions) as you
+	can. This will allow two different groups to use for eg. functions with the
+	same name. Of course, your main function must <U>not</U> be defined as static.
+	<LI>avoid usage of statically allocated global arrays (allocate them with
+	Malloc() instead). If you use constant data in a global array, load the data
+	from a file after having allocated the array.
+	</UL></P>
+
+	<P><FONT size="2" color="#FF8040"><B>For everybody !</B></FONT></P>
+	<P>We will be obliged to fix a size limit for each part. Modules must be
+	as small as possible. The size limit will be applied to <U>compressed</U> size,
+	which means you can use raw pictures files without any problem because they
+	will be crunched in the final archive file.</P>
+
+	<P><FONT size="2" color="#FF8040"><B>What we need to decide !</B></FONT></P>
+	<P>The most important thing is to agree about what common functions we
+	have to provide the coders. All parts will have to use the same library. This
+	will allow us to handle problems more easily and will reduce the full demo
+	code size and decrease bug number for these parts.<BR><BR>
+	One of the goals is to keep the library as small and as simple as
+	possible. See all .TXT files in the lib directory for more precise information.
+
+	<P><FONT size="2" color="#FF8040"><B>Where to get information ?</B></FONT></P>
+	<P>For any information, question, idea or anything, even if you are only
+	partly interested or you want to know the advancement level of the project,
+	contact me !<BR><BR>
+	email :<BR>
+        lecroarv@????<BR>
+	subscribe to the mailing list :<BR>
+        <A HREF="http://www.onelist.com/subscribe.cgi/megademo">http://www.onelist.com/subscribe.cgi/megademo</A><BR>
+	the url where to get the common library :<BR>
+        <A HREF="http://www.lifl.fr/~letouzey" target="_top">http://www.lifl.fr/~letouzey</A><BR>
+        <BR>
+    </td>
+    <td width="40">&nbsp;</td>
+    <TD valign="top" align="right" width="180"><FONT size="5" color="#FF8040" face="Verdana"><B><I>
+      <BR>
+      <FONT size="2" color="#FFFFFF"><A HREF="../handles/ace1.htm">Ace</A> is a french computer science student who will become master of
+      science this year in Lille (north of France). He's coder in a totally unknown demo group called Melting-Pot.
+      He's also an organizer of the <A HREF="http://inf.ml.org/wired" target="_top">Wired 98</A> demo party in Belgium.<BR></FONT>
+      <BR><BR><BR>
+      &lt;&lt;... you can do all you want ...&gt;&gt;
+      <BR><BR><BR><BR><BR><BR><BR><BR>
+      &lt;&lt;... The goal is to finish all parts before the end of the summer holidays ...&gt;&gt;
+      <BR><BR><BR><BR><BR><BR><BR><BR><BR>
+      &lt;&lt;... OS would be DOS (try to imagine it is an OS) ...&gt;&gt;
+      <BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR><BR>
+      &lt;&lt;... All parts will have to use the same library ...&gt;&gt;
+      </I></B></FONT></TD>
+  </tr>
+</table>
+
+<table border="0" cellpadding="0" cellspacing="0" width="630">
+  <tr>
+    <td width="10">&nbsp;</td>
+    <TD width="620" colspan="3"><FONT size="1" face="Verdana"><BR>
+      [ <A HREF="news.html">&gt;NEWS</A> /
+      <A HREF="../birthdates.html">&gt;PEOPLE</A> /
+      <A HREF="../parties_incoming.htm">&gt;PARTIES</A> /
+      <A HREF="misc.htm">&gt;MISC</A> /
+      <A HREF="../links.htm">&gt;LINKS</A> /
+      <A HREF="faq.htm">&gt;FAQ</A> /
+      <A HREF="credits.htm">&gt;CREDITS</A> ]<BR>
+      </FONT><HR size="1" align="left">
+    </TD>
+  </tr>
+</table>
+</body>
+</html>

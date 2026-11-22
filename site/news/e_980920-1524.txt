@@ -1,0 +1,5 @@
+http://www.pixel.scene.org
+_top
+#Pixel HomePage
+Irc channel #pixel got a new homepage. It contains all the news related to #pixel, lists of people who visit pixel, and results of grafix compos that happen on #pixel. It's also very open to all kinds of grafix related suggestions.
+dryes

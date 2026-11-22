@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "oj98-build",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "3422", "--directory", "build"],
+      "port": 3422
+    }
+  ]
+}

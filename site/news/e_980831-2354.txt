@@ -1,0 +1,5 @@
+http://www.castlex.com/modplug/
+_top
+Mod Plug Player
+New versions of the famous module player. Mod Plug Player is now v1.38 (fixing some minors and major bugs (better sound quality), and adding some new features like the "minibar" mod a la winamp). Mod Plug Plugin (Netscape, MSIE and Opera) is now v1.91.02 and gets the new features of the player. The Mod Plug Tracker is now Beta 2.3 (new equalizer, instrument library, ...)
+chandra

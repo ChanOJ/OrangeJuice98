@@ -1,0 +1,5 @@
+ftp://ftp.hornet.org/pub/demos/goodbye.txt
+_top
+Hornet Shutdown
+The worst news i could announce. End of an Era, Hornet is shutting down. "As a result, the archive will be dismantled as soon as possible.  All html pages will be deleted.  The search engine will cease to function. The /incoming directory will be cataloged, emptied, and removed.  All sites being web-hosted under /info will find new homes.  Our mirror sites will no longer be resolve. At this point, there will be no web interface." <BR>Orange Juice greets you all, Hornet Team.
+dryes
