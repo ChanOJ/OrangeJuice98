@@ -246,10 +246,11 @@ resource "bunnynet_pullzone_edgerule" "static_cache" {
   priority    = 7
   match_type  = "MatchAny"
 
-  triggers = [{
+  # bunny.net accepts at most 5 patterns per trigger: one trigger per chunk of 5.
+  triggers = [for i in range(0, length(local.static_extensions), 5) : {
     type       = "UrlExtension"
     match_type = "MatchAny"
-    patterns   = local.static_extensions
+    patterns   = slice(local.static_extensions, i, min(i + 5, length(local.static_extensions)))
     parameter1 = null
     parameter2 = null
   }]
