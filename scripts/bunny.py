@@ -56,12 +56,19 @@ def api_get(path: str) -> object:
     return json.loads(request("GET", API + path, {"AccessKey": api_key(), "Accept": "application/json"}))
 
 
-def storage_zone(name: str) -> dict:
+def find_storage_zone(name: str) -> dict | None:
     zones = api_get("/storagezone?perPage=1000&search=" + urllib.parse.quote(name))
     for z in zones:
         if z["Name"] == name and not z.get("Deleted"):
             return z
-    sys.exit(f"Storage zone {name!r} not found.")
+    return None
+
+
+def storage_zone(name: str) -> dict:
+    zone = find_storage_zone(name)
+    if zone is None:
+        sys.exit(f"Storage zone {name!r} not found.")
+    return zone
 
 
 def pullzone(name: str) -> dict:

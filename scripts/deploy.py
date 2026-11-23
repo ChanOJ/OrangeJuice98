@@ -70,6 +70,17 @@ def main() -> int:
         sys.exit("site/ is empty: aborting.")
     sums = {rel: hashlib.sha256(data).hexdigest().upper() for rel, data in local.items()}
 
+    if bunny.find_storage_zone(cfg["storage_zone"]) is None:
+        # A new site: the zones are created by the first apply of the infra workflow, which
+        # then deploys site/ itself. Not an error (the merge of the import PR lands here).
+        print(f"::notice::Storage zone {cfg['storage_zone']!r} does not exist yet: nothing deployed. "
+              "Run the 'Infra: bunny.net' workflow with action 'apply'.")
+        out = os.environ.get("GITHUB_OUTPUT")
+        if out:
+            with open(out, "a", encoding="utf-8") as f:
+                f.write("skipped=true\n")
+        return 0
+
     storage = bunny.Storage(cfg["storage_zone"])
     remote, remote_dirs = storage.list_recursive()
     uploads = sorted(rel for rel in local if remote.get(rel) != sums[rel])
