@@ -18,6 +18,7 @@ import html
 import os
 import re
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 
@@ -529,6 +530,10 @@ def render_shtml(ctx, rel, text):
 
 # ------------------------------------------------------------ generic html pass
 FORM_RE = re.compile(r"<form\b.*?</form\s*>", re.I | re.S)
+# The original "if (top == self) { ...confirm() language prompt...; location.href = frames.htm?page }" snippet of
+# 1,300 pages: dropped (its else branch, when present, stays as a plain block). scripts/frame-restore.js now puts
+# a page opened on its own back in its frames, with no prompt.
+TOP_REDIRECT_RE = re.compile(r"if\s*\(\s*top\s*==\s*self\s*\)\s*\{[^{}]*\}[ \t]*;?(?:\s*else\s*(?=\{))?")
 RICOCHET_RE = re.compile(r"https?://(?:www\.)?citeweb\.net/ricochet\?\d*;?(https?://[^\"'<> ]+)", re.I)
 ATTR_RE = re.compile(r"""(?ix)\b(href|src|background|action)\s*=\s*(?:(["'])(.*?)\2|([^\s"'>]+))""")
 LOCATION_RE = re.compile(r"""(?i)(location\.href\s*=\s*)(["'])(.*?)\2""")
@@ -681,6 +686,7 @@ def convert_html(ctx, text, rel):
         return "%s=%s%s%s" % (m.group(1), q, rewrite_url(val, ctx), q)
     text = ATTR_RE.sub(attr, text)
     text = LOCATION_RE.sub(lambda m: m.group(1) + m.group(2) + rewrite_url(m.group(3), ctx) + m.group(2), text)
+    text = TOP_REDIRECT_RE.sub("", text)
     return add_font_fallback(text)
 
 
@@ -821,6 +827,8 @@ def main(argv=None):
         print("kept as UTF-8 (no latin-1 meta): %s" % ", ".join(ctx.skipped_utf8))
     for w in ctx.warnings:
         print("WARNING:", w, file=sys.stderr)
+    # Crawlers and frames: sitemap.xml, robots.txt and the frame-restore script tag (scripts/seo.py).
+    subprocess.run([sys.executable, "-I", str(REPO / "scripts" / "seo.py"), "--site", str(out)], check=True)
     return 0
 
 
