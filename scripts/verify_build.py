@@ -41,6 +41,8 @@ LEFTOVERS = [
     ("mailto:", re.compile(r"(?i)mailto:")),
     ("birth year in handle sheet", re.compile(r"(?is)birthdate\s*<font[^>]*>\(dd/mm/yyyy\)</font>:\s*<br>\s*<font[^>]*>\s*\d{1,2}/\d{1,2}/\d{2,4}\s*<")),
 ]
+# The removal-request footer (statify.py) carries the only mailto: of the site: leave it out of the leftovers scan.
+REMOVAL_NOTE_RE = re.compile(r'(?s)<div id="removal-note".*?</div>')
 IPV4 = re.compile(r"(?<![\d.])(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?![\d.])")
 
 
@@ -168,7 +170,7 @@ def main(argv=None):
     hits = defaultdict(list)
     for rel in bfiles:
         if rel.lower().endswith((".htm", ".html", ".txt")):
-            t = rd(build / rel)
+            t = REMOVAL_NOTE_RE.sub("", rd(build / rel))
             for label, rx in LEFTOVERS:
                 if label == "form tag" and not rel.lower().endswith((".htm", ".html")):
                     continue
