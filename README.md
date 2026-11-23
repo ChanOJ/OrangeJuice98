@@ -27,7 +27,32 @@ except GET/HEAD/OPTIONS is refused at the edge.
 
 DNS is not managed here: the hostname is a CNAME to `<pull zone>.b-cdn.net` at Infomaniak.
 
-## Hardening (pull zone, `infra/main.tf`)
+## What was changed from the original
+
+The site was rebuilt from classic ASP (`.shtml` files reading flat `.txt` files, no SQL) into
+plain HTML; the reverse-engineered data model is in [`docs/data-model.md`](docs/data-model.md).
+
+- Dynamic pages rendered once from the data; forms, counters and admin pages removed (a short
+  "archived, read-only" notice replaces them).
+- Personal data redacted, keeping the original layout: birth years (`26/12/????`), e-mail
+  domains (`nick@????`), onliner browser/host fields, visitor IPs and hosts in the stats pages.
+  Logins, logs and ASP sources are never published (`scripts/exclude-globs.txt`).
+- `face="verdana"` gets sans-serif fallbacks (`DejaVu Sans, Geneva, sans-serif`) for systems
+  without Verdana.
+- `birthdates.shtml` and two demo pages come from the `OrangeJuice98-alt` copy, which had newer
+  versions (see `docs/data-model.md`).
+
+## Regenerating `site/`
+
+`site/` is generated: never edit it by hand, fix `scripts/statify.py` and regenerate. The raw
+originals (with logins and logs) live **outside the repository**, in
+`~/Code/OrangeJuice98-private/site-raw/` (or `$OJ98_RAW`); keep that folder, it is the only copy.
+
+```bash
+python3 scripts/statify.py && python3 scripts/verify_build.py
+```
+
+, `infra/main.tf`)
 
 - Edge rule 1: any method other than GET, HEAD, OPTIONS is blocked at the edge, before the
   origin (bunny.net answers 403; edge rules cannot return 405). `block_post_requests` is also on.
@@ -67,7 +92,7 @@ pass-cli run --env-file infra/secrets.env -- python3 scripts/deploy.py --dry-run
 cd infra && pass-cli run --env-file secrets.env -- tofu plan
 ```
 
-## First setup (nothing exists on bunny.net yet)
+## First setup (done on 2026-11-22, kept as a record)
 
 1. Write `site.json` and validate offline (secrets are the shared ones of the other old sites: same Proton Pass references, `OrangeJuice97-tofu-state-passphrase`):
 
