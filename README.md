@@ -27,6 +27,8 @@ except GET/HEAD/OPTIONS is refused at the edge.
 
 DNS is not managed here: the hostname is a CNAME to `<pull zone>.b-cdn.net` at Infomaniak.
 
+Full list of the sites: https://chanoj.github.io/
+
 ## What was changed from the original
 
 The site was rebuilt from classic ASP (`.shtml` files reading flat `.txt` files, no SQL) into
