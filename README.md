@@ -8,6 +8,12 @@ Kept online for history, no longer developed. Visitors can never write anything:
 are the cleaned, redacted static pages committed in `site/`, the CDN only serves files, and every method
 except GET/HEAD/OPTIONS is refused at the edge.
 
+## Search engines
+
+`scripts/seo.py` writes `robots.txt` (allow everything, with the `Sitemap:` line) and `sitemap.xml` (indexable pages only) into `site/`; `statify.py` runs it at the end of the build (alone: `python3 -I scripts/seo.py`).
+
+`scripts/frame-restore.js` (one `<script>` tag in every page, added by `seo.py`) rebuilds the frames around a page opened on its own (a search result): it goes to `/f/index.html#p=<page>` (`/e/` for the pages of `/e/`), and the framesets (the menu one, then a demo's own) load it into the right frame. It replaces the original `if (top == self)` snippet with its `confirm()` language prompt, which `statify.py` drops. The page stays a plain file, so crawlers still read it.
+
 ## Layout
 
 | Path | Content |
