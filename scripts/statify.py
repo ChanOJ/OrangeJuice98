@@ -614,6 +614,21 @@ def unlink_excluded(ctx, text, rel):
     return ANCHOR_RE.sub(fn, text)
 
 
+FACE_VERDANA_RE = re.compile(r"""(?i)(\bface\s*=\s*)(["']?)(verdana\b[^"'>]*)(\2)""")
+FONT_FALLBACK = ", DejaVu Sans, Geneva, sans-serif"
+
+
+def add_font_fallback(text):
+    """Verdana only exists on Windows, macOS and iOS: elsewhere face="verdana" falls back to a
+    serif font. Append sans-serif fallbacks to the existing attribute (no CSS, same layout)."""
+    def fn(m):
+        value = m.group(3)
+        if "sans-serif" in value.lower():
+            return m.group(0)
+        return m.group(1) + m.group(2) + value.rstrip() + FONT_FALLBACK + m.group(4)
+    return FACE_VERDANA_RE.sub(fn, text)
+
+
 def convert_html(ctx, text, rel):
     def inc(m):
         p = ctx.site / m.group(1).lstrip("/")
@@ -639,7 +654,7 @@ def convert_html(ctx, text, rel):
         return "%s=%s%s%s" % (m.group(1), q, rewrite_url(val, ctx), q)
     text = ATTR_RE.sub(attr, text)
     text = LOCATION_RE.sub(lambda m: m.group(1) + m.group(2) + rewrite_url(m.group(3), ctx) + m.group(2), text)
-    return text
+    return add_font_fallback(text)
 
 
 def declare_charset(text):
