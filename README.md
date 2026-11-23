@@ -75,6 +75,10 @@ python3 scripts/statify.py && python3 scripts/verify_build.py
 - Cookies are stripped before the origin; TLS "Compatible"; forced HTTPS.
 - Custom 404: `hosting/404.html` (`not_found_page` in `site.json`).
 
+## Removal requests
+
+Pages that list or describe people end with a small footer, "To be removed from this page, contact me." (a `mailto:` link). `scripts/statify.py` adds it (`is_people_page`), so it survives rebuilds; `scripts/verify_build.py` leaves it out of its `mailto:` and e-mail checks.
+
 ## Deploying
 
 - **Website**: push a change under `site/` or `hosting/` to `main` → workflow *Website: deploy*

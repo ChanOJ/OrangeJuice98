@@ -29,6 +29,33 @@ MASK = "????"   # placeholder for every redacted value
 META_CHARSET = '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">'
 HOSTS_SELF = r"(?:ojuice\.citeweb\.net|www\.citeweb\.net/ojuice)"
 
+# ---- removal-request footer: added to every page that lists or describes people
+REMOVAL_MARK = 'id="removal-note"'
+REMOVAL_NOTE = (
+    '<div id="removal-note" style="clear:both;margin:28px auto 8px;padding:6px 8px 0;width:60%;'
+    'border-top:1px solid #808080;text-align:center;font:10px/14px Verdana,Arial,Helvetica,sans-serif;'
+    'color:#808080;background:transparent">To be removed from this page, '
+    '<a href="mailto:chandra_oj@pm.me" style="color:#808080;text-decoration:underline">contact me</a>.</div>'
+)
+_BODY_END = re.compile(r"(?is)</body\s*>(?!.*</body\s*>)")
+
+
+def add_removal_note(text):
+    if REMOVAL_MARK in text:
+        return text
+    m = _BODY_END.search(text)
+    if m:
+        return text[: m.start()] + REMOVAL_NOTE + "\n" + text[m.start():]
+    return text + "\n" + REMOVAL_NOTE + "\n"
+
+PEOPLE_PAGES = re.compile(r"^(?:handles/[^/]+\.htm|groups/[^/]+\.htm|birthdates\.html"
+                          r"|[ef]/(?:credits|interview_[^/]+|photo\d*)\.htm)$")
+
+
+def is_people_page(rel):
+    return bool(PEOPLE_PAGES.match(rel))
+
+
 MONTHS_EN = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 # VBScript MonthName(n, True) follows the server locale; the host was French.
 # Assumption (not verifiable from the sources): English pages -> English, French pages -> French.
@@ -717,6 +744,8 @@ def run(ctx):
             ctx.copied += 1
 
     for new_rel, (enc, text) in outputs.items():
+        if is_people_page(new_rel):
+            text = add_removal_note(text)
         dst = out / new_rel
         dst.parent.mkdir(parents=True, exist_ok=True)
         dst.write_bytes(text.encode(enc, errors="xmlcharrefreplace"))
