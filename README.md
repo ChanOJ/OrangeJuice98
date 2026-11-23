@@ -39,8 +39,11 @@ plain HTML; the reverse-engineered data model is in [`docs/data-model.md`](docs/
   Logins, logs and ASP sources are never published (`scripts/exclude-globs.txt`).
 - `face="verdana"` gets sans-serif fallbacks (`DejaVu Sans, Geneva, sans-serif`) for systems
   without Verdana.
-- `birthdates.shtml` and two demo pages come from the `OrangeJuice98-alt` copy, which had newer
-  versions (see `docs/data-model.md`).
+- `birthdates.shtml` and two demo pages come from a second copy of the site that had newer
+  versions; it is merged into the raw tree and no longer needed.
+- `webcam32.jpg`, a 1999 capture of the Orange Juice webcam, is added to the raw tree so that
+  `webcams.htm` shows it from the site itself instead of the dead `ojuice.citeweb.net` host
+  (the other webcams of that page are dead external images, left as they were).
 
 ## Regenerating `site/`
 
