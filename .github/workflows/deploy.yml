@@ -55,6 +55,7 @@ jobs:
           clamscan -r --infected --no-summary site/ hosting/ || { echo "::error::ClamAV flagged files"; exit 1; }
 
       - name: Sync to the storage zone and purge the cache
+        id: sync
         run: |
           args=""
           if [ "$DRY_RUN" = "true" ]; then args="--dry-run"; fi
@@ -62,5 +63,5 @@ jobs:
           python3 scripts/deploy.py $args
 
       - name: Smoke test
-        if: env.DRY_RUN != 'true'
+        if: env.DRY_RUN != 'true' && steps.sync.outputs.skipped != 'true'
         run: python3 scripts/smoke_test.py
