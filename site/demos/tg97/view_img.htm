@@ -16,7 +16,7 @@ else return document.cookie;
 }
 {
 document.write("<center><br><A HREF=\"javascript:history.back()\">");
-document.write("<IMG src=\""+GetCookie()+"\" BORDER=0>");
+if (GetCookie()) { document.write("<IMG src=\""+GetCookie()+"\" BORDER=0>"); } else { document.write('<FONT size="1" color="#808080">[ no picture selected: open one from a gallery ]</FONT>'); }
 document.writeln("</A></center>");
 var exp = new Date();
 document.cookie=document.cookie+"; expires="+exp.toGMTString();

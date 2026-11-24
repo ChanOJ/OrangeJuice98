@@ -41,6 +41,10 @@ LEFTOVERS = [
     ("mailto:", re.compile(r"(?i)mailto:")),
     ("birth year in handle sheet", re.compile(r"(?is)birthdate\s*<font[^>]*>\(dd/mm/yyyy\)</font>:\s*<br>\s*<font[^>]*>\s*\d{1,2}/\d{1,2}/\d{2,4}\s*<")),
 ]
+MAILTO_ADDR = re.compile(r"(?i)mailto:([^\"'>\s?]*)")
+EMAIL_ADDR = re.compile(r"(?<![*A-Za-z0-9._+-])[A-Za-z0-9._+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")
+# Third-party text files (demo results, .nfo) are published byte-identical: only the site's own data is scanned.
+OWN_TXT = ("news/", "data/")
 # The removal-request footer (statify.py) carries the only mailto: of the site: leave it out of the leftovers scan.
 REMOVAL_NOTE_RE = re.compile(r'(?s)<div id="removal-note".*?</div>')
 IPV4 = re.compile(r"(?<![\d.])(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)\.){3}(?:25[0-5]|2[0-4]\d|1?\d?\d)(?![\d.])")
@@ -167,14 +171,24 @@ def main(argv=None):
     print("build: %d files" % len(bfiles))
 
     # 1. leftovers (text files only: html + txt)
+    # addresses published whole on purpose (nick, role, first name): build-meta/kept-emails.txt, written by statify.py
+    kf = REPO / "build-meta" / "kept-emails.txt"
+    kept = {l.strip().lower() for l in rd(kf).splitlines() if l.strip()} if kf.is_file() else set()
     hits = defaultdict(list)
     for rel in bfiles:
-        if rel.lower().endswith((".htm", ".html", ".txt")):
+        low = rel.lower()
+        if low.endswith((".htm", ".html")) or (low.endswith(".txt") and rel.startswith(OWN_TXT)):
             t = REMOVAL_NOTE_RE.sub("", rd(build / rel))
             for label, rx in LEFTOVERS:
-                if label == "form tag" and not rel.lower().endswith((".htm", ".html")):
+                if label == "form tag" and not low.endswith((".htm", ".html")):
                     continue
-                if rx.search(t):
+                if label == "e-mail address":
+                    if any(m.group(0).lower() not in kept for m in EMAIL_ADDR.finditer(t)):
+                        hits[label].append(rel)
+                elif label == "mailto:":
+                    if any(m.group(1).lower() not in kept for m in MAILTO_ADDR.finditer(t)):
+                        hits[label].append(rel)
+                elif rx.search(t):
                     hits[label].append(rel)
     for label, _ in LEFTOVERS:
         if hits[label]:

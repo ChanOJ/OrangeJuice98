@@ -30,13 +30,16 @@ MASK = "????"   # placeholder for every redacted value
 META_CHARSET = '<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">'
 HOSTS_SELF = r"(?:ojuice\.citeweb\.net|www\.citeweb\.net/ojuice)"
 
-# ---- removal-request footer: added to every page that lists or describes people
+# ---- removal-request footer: added to every page that shows personal data (family name, full postal
+# address, or an e-mail whose local part is in clear). Pages with nicks only, role addresses or no
+# personal data do not get it. Its width is the site's own column (630 px tables), centred.
 REMOVAL_MARK = 'id="removal-note"'
 REMOVAL_NOTE = (
-    '<div id="removal-note" style="clear:both;margin:28px auto 8px;padding:6px 8px 0;width:60%;'
-    'border-top:1px solid #808080;text-align:center;font:10px/14px Verdana,Arial,Helvetica,sans-serif;'
+    '<div id="removal-note" style="clear:both;margin:28px 0 8px 10px;padding:6px 8px 0;width:630px;max-width:96%;'
+    'box-sizing:border-box;border-top:1px solid #808080;text-align:left;'
+    'font:10px/14px Verdana,Arial,Helvetica,sans-serif;'
     'color:#808080;background:transparent">To be removed from this page, '
-    '<a href="mailto:chandra_oj@pm.me" style="color:#808080;text-decoration:underline">contact me</a>.</div>'
+    '<a href="mailto:chandra_oj&#64;pm.me" style="color:#808080;text-decoration:underline">contact me</a>.</div>'
 )
 _BODY_END = re.compile(r"(?is)</body\s*>(?!.*</body\s*>)")
 
@@ -49,8 +52,9 @@ def add_removal_note(text):
         return text[: m.start()] + REMOVAL_NOTE + "\n" + text[m.start():]
     return text + "\n" + REMOVAL_NOTE + "\n"
 
-PEOPLE_PAGES = re.compile(r"^(?:handles/[^/]+\.htm|groups/[^/]+\.htm|birthdates\.html"
-                          r"|[ef]/(?:credits|interview_[^/]+|photo\d*)\.htm)$")
+# Pages that always carry the footer (real names in the text); every other page gets it from what its
+# e-mail addresses show (see ``Privacy`` below), or from a third-party file it links (``Ctx.linkers``).
+PEOPLE_PAGES = re.compile(r"^(?:birthdates\.html|[ef]/(?:credits|interview_[^/]+|photo\d*)\.htm)$")
 
 
 def is_people_page(rel):
@@ -82,6 +86,11 @@ class Ctx:
         self.unlinked = {}
         self.stats_masked = 0
         self.site_files = None
+        self.privacy = Privacy()
+        self.linkers = {}       # page rel -> third-party files with personal data it links
+        self.notes = []
+        self.published = set()
+        self.third_party_personal = set()
 
     def warn(self, msg):
         self.warnings.append(msg)
@@ -191,8 +200,7 @@ NOTICE = """<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <HTML>
 <HEAD>
 %(meta)s
-<META name="robots" content="noindex,follow">
-<TITLE>Orange Juice - %(title)s (archived)</TITLE>
+%(robots)s<TITLE>Orange Juice - %(title)s (archived)</TITLE>
 </HEAD>
 <BODY bgcolor="#000000" text="#FFFFFF" link="#FF8040" vlink="#FF8040" alink="#FF8040">
 <CENTER>
@@ -216,8 +224,10 @@ nothing can be added, sent or modified here.</FONT><BR><BR>
 """
 
 
-def notice_page(title, body):
-    return NOTICE % {"meta": META_CHARSET, "title": title, "body": body}
+def notice_page(title, body, indexable=False):
+    """Notice pages that replace a form stay out of the search results; the list of party lists is a real page."""
+    robots = "" if indexable else '<META name="robots" content="noindex,follow">\n'
+    return NOTICE % {"meta": META_CHARSET, "title": title, "body": body, "robots": robots}
 
 
 # ---------------------------------------------------------------- page renderers
@@ -469,7 +479,7 @@ def render_parties(ctx):
                   for n, u, c in index)
     body = ('<FONT size="3">Lists of people who announced they would go to a party (frozen):</FONT><BR><BR>\n'
             + lst)
-    made.append(("parties_come.html", notice_page("Who goes to which party?", body)))
+    made.append(("parties_come.html", notice_page("Who goes to which party?", body, indexable=True)))
     return made
 
 
@@ -591,16 +601,176 @@ def redact_stats(text, ctx=None):
     return re.sub(r"(?<![\d.])(?:\d{1,3}\.){3}\d{1,3}(?![\d.])", MASK, text)
 
 
-ICQ_IMG_RE = re.compile(r"<img\b[^>]*online\.mirabilis\.com[^>]*>", re.I)   # ICQ presence badge (dead host, leaks UIN lookups)
-MAILTO_A_RE = re.compile(r"<a\b[^>]*href\s*=\s*[\"']?mailto:[^>]*>(.*?)</a\s*>", re.I | re.S)
+# ICQ presence badge (`online.mirabilis.com/scripts/online.dll?icq=<uin>`, a live image from a dead host): replaced
+# by the site's own red (offline) flower (pictures/icqoff.gif, the red "offline" flower of the legend), hard-coded, so no request
+# goes to any ICQ server. The UIN, its pager link and the "ICQ state :" label stay as in the original.
+ICQ_IMG_RE = re.compile(r"<img\b[^>]*online\.mirabilis\.com/[^>]*icq=(\d+)[^>]*>", re.I)
+ICQ_FLOWER = '<IMG src="/pictures/icqoff.gif" align="top" width="18" height="18" border="0" alt="ICQ #%s" title="ICQ #%s">'
+MAILTO_A_RE = re.compile(r"<a\b[^>]*href\s*=\s*[\"']?mailto:([^\"'>\s?]*)[^>]*>(.*?)</a\s*>", re.I | re.S)
 EMAIL_RE = re.compile(r"([A-Za-z0-9._+-]+)@([A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+)")
 
+# ---- e-mail policy (standing decision, updated 2026-11-24): the domain is masked (`local@????`) only when
+# the part left of the `@` holds a family name. A nick (the handle of the page, or a role address) and a
+# first name alone keep the full address. Anything else (family names, initials + name, unknown words) is
+# masked: that is the safe default, and the doubtful ones are listed for the owner in `review-emails.txt`
+# (outside the repository). Exception (owner decision 2026-11-24): on the people pages (handles/, groups/) there
+# are too many to sort by hand, so every address there keeps its domain and shows only the first and last
+# letter of the local part (`l******t@domain.com`).
+ROLE_LOCALS = {"ojuice", "orangejuice", "info", "infos", "contact", "webmaster", "tech", "admin", "support",
+               "sales", "office", "jobs", "mail", "postmaster", "press", "staff", "news", "request",
+               "orangejuice-request", "hostmaster", "abuse", "help", "organisation", "organizers"}
+FIRST_NAMES = set("""
+aaron adam adrian adrien alain alan albert alejandro alex alexander alexandre alexandra alexis alfred ali alice
+amy ana andre andrea andreas andrew andy angel angela anna anne anthony antoine anton antonio arnaud arne arthur
+axel barbara bastien ben benjamin benoit bernard bernd bert bertrand bill bjorn bob boris brian bruno carl carlos
+carole carsten catherine cedric celine charles charlotte chris christian christina christophe christopher claire
+claude clement cyril damien dan daniel danny dave david denis didier dirk dominique eddie edouard edward elena
+elise emile emilie emmanuel eric erik ernst esteban etienne eva fabian fabien fabrice felix fernando filip florent
+florian francesco francis francois franck frank franz fred frederic frederik gabriel gary gaston gaetan geoffrey
+george georges gerald gerard gilles giovanni greg gregory guillaume gunnar gustav hans harald helen helene henri
+henrik henry herve hugo hugues igor ivan jack jacob jacques jakob james jan jason jean jeanluc jeanmarc jeanne
+jeff jennifer jens jeremie jeremy jerome jesper jim joachim joakim joe joel john johan johannes jon jonas jonathan
+jose josef joseph juan jules julia julian julien jurgen justin karl karsten kati katrin ken kevin kim klaus kurt
+lars laura laurence laurent leo leon linda lionel lisa lucas lucie ludovic luc luca luis lukas magnus manuel marc
+marcel marco marcus margaux maria marie marc marion mario marius mark markus marta martin mathias mathieu matt
+matthew matthias maurice max maxime michael michel michele mick mike miguel mikael mika mikko monica nathalie
+nicholas nick nico nicolas niels nils noel norbert olaf olivier oscar otto pablo pascal patrice patrick paul
+paula pedro per peter petra phil philip philippe pierre rafael ralf raphael raymond rene reinhard remi remy
+renaud richard rob robert roberto robin rodolphe roger roland roman ronald ronny ruben rudolf sam samuel sandra
+sandrine sara sarah sebastian sebastien serge sergio sergey simon sofia sophie stefan stefano stephane stephen
+steve steven stig stuart sven sylvain sylvie tanja teddy thibault thierry thomas tim timothy tobias tom tommy
+tony torsten ulrich ulf valentin valerie vera victor vincent walter werner wilhelm william willy wolfgang
+xavier yann yannick yves zoe
+""".split())
 
-def redact_emails(text):
-    """mailto: links become plain text; `local@domain` becomes `local@????` (layout kept, domain masked)."""
-    text = MAILTO_A_RE.sub(lambda m: m.group(1), text)
-    text = re.sub(r"(?i)mailto:", "", text)   # any leftover mailto: (e.g. in a tag we did not match)
-    return EMAIL_RE.sub(lambda m: m.group(1) + "@" + MASK, text)
+
+KEEP_FILE = REPO / "scripts" / "email-keep.txt"
+KEEP_LOCALS = {l.strip().lower() for l in KEEP_FILE.read_text(encoding="utf-8").splitlines()
+               if l.strip() and not l.startswith("#")} if KEEP_FILE.is_file() else set()
+
+
+def _norm(s):
+    return re.sub(r"[^a-z0-9]", "", s.lower())
+
+
+def _base(s):
+    return re.sub(r"\d+$", "", _norm(s))
+
+
+def email_kind(local, nicks, known=frozenset()):
+    """'role' | 'nick' (a handle: the page's own, or any handle/group of the site) | 'first' (a first name) | 'masked'."""
+    l = local.lower()
+    if _base(l) in ROLE_LOCALS or l in ROLE_LOCALS or l in KEEP_LOCALS:
+        return "role"
+    b = _base(l)
+    if len(b) >= 3 and b in known:
+        return "nick"
+    for n in nicks:
+        nb = _base(n)
+        if len(nb) >= 3 and (b == nb or (len(nb) >= 4 and (nb in _norm(l))) or (len(b) >= 4 and b in _norm(n))):
+            return "nick"
+    if b in FIRST_NAMES:
+        return "first"
+    return "masked"
+
+
+NICK_FONT_RE = re.compile(r'<font\b[^>]*size\s*=\s*["\']?6["\']?[^>]*>\s*(?:<b>)?([^<]{1,40})', re.I)
+TITLE_RE = re.compile(r"(?is)<title[^>]*>(.*?)</title>")
+
+
+def page_nicks(text):
+    """The handles a page is about: its big (size 6) headings, and the end of its title (`... - Nick`)."""
+    out = {html.unescape(m.group(1)).strip() for m in NICK_FONT_RE.finditer(text)}
+    m = TITLE_RE.search(text)
+    if m and " - " in m.group(1):
+        out.add(html.unescape(m.group(1).rsplit(" - ", 1)[1]).strip())
+    return {n for n in out if n}
+
+
+class Privacy:
+    """Run-wide record of what the e-mail policy did, to place footers and to write the review files."""
+
+    def __init__(self):
+        self.page_flag = {}      # rel -> True when the page shows personal data through an address
+        self.kept = set()        # full addresses published (written to build-meta/kept-emails.txt)
+        self.masked = {}         # local part -> 'pattern' | 'unknown' (review file, never committed)
+        self.masked_pages = {}
+        self.known_nicks = frozenset()   # base form of every handle and group name of the site
+
+
+def classify_masked(local):
+    """Rough guess for the review file: does a masked local part look like a family name?"""
+    if re.search(r"[._-]", local) or re.match(r"^[a-z][a-z]{4,}$", local.lower()) is None:
+        return "pattern"
+    return "unknown"
+
+
+def out_rel(rel):
+    return rel[:-len(".shtml")] + ".html" if rel.endswith(".shtml") else rel
+
+
+def redact_emails(text, ctx=None, rel=""):
+    """Apply the e-mail policy: `mailto:` links and addresses with a family name (or doubtful) become plain
+    `local@????`; nick, role and first-name addresses stay whole (with their mailto: link)."""
+    nicks = page_nicks(text) if rel.startswith(("handles/", "groups/")) else set()
+    priv = ctx.privacy if ctx is not None else Privacy()
+
+    people = rel.startswith(("handles/", "groups/"))
+
+    def star(local):
+        return local[0] + "*" * (len(local) - 2) + local[-1] if len(local) > 2 else local[0] + "*" * (len(local) - 1)
+
+    def decide(local, domain):
+        """True: keep whole; False: `local@????`; None (people pages): `l****t@domain`."""
+        kind = email_kind(local, nicks, priv.known_nicks)
+        if kind in ("masked", "first") and rel:
+            priv.page_flag[out_rel(rel)] = True
+        if people:
+            return None
+        if kind == "masked":
+            priv.masked.setdefault(local.lower(), classify_masked(local))
+            priv.masked_pages.setdefault(local.lower(), set()).add(rel)
+            return False
+        priv.kept.add(("%s@%s" % (local, domain)).lower())
+        return True
+
+    def anchor(m):
+        em = EMAIL_RE.fullmatch(m.group(1).strip())
+        if em and decide(em.group(1), em.group(2)) is True:
+            return m.group(0)
+        return m.group(2)
+    text = MAILTO_A_RE.sub(anchor, text)
+
+    def addr(m):
+        r = decide(m.group(1), m.group(2))
+        if r is True:
+            return m.group(0)
+        return star(m.group(1)) + "@" + m.group(2) if r is None else m.group(1) + "@" + MASK
+    text = EMAIL_RE.sub(addr, text)
+    # mailto: left in front of an address that has just been masked (a tag the anchor regex did not match)
+    return re.sub(r"(?i)mailto:(?=[^\"'>\s]*(?:@\?\?\?\?|\*+[^@\"'>\s]@))", "", text)
+
+
+# Phone numbers (BBS lists, a job ad, an old news item): the last four digits are masked, the rest stays.
+PHONE_RES = [
+    re.compile(r"(?<![\w/.])\+\d{1,3}[- ]\(?\d{1,4}\)?(?:[-. ]\d+){1,5}"),    # +33-1-4177-9218, +31 79 3460269
+    re.compile(r"(?<![\d.])0[1-9](?:[ .]\d\d){4}(?!\d)"),                       # 01 40 39 11 11, 06.11.38.56.93
+]
+
+
+def mask_phones(text):
+    def fn(m):
+        s, n = list(m.group(0)), 0
+        for i in range(len(s) - 1, -1, -1):
+            if s[i].isdigit():
+                s[i] = "?"
+                n += 1
+                if n == 4:
+                    break
+        return "".join(s)
+    for rx in PHONE_RES:
+        text = rx.sub(fn, text)
+    return text
 
 
 # handle sheets: "> birthdate (dd/mm/yyyy):" followed by the value (the year is masked)
@@ -661,6 +831,129 @@ def add_font_fallback(text):
     return FACE_VERDANA_RE.sub(fn, text)
 
 
+# ---- link repair: internal links that 404 on the original (checked by verify_build.py)
+ROOT_PAGES_LANG = {"chat.htm": "e", "metastream.htm": "e", "pc_megademo_project.htm": "e",
+                   "stats.htm": "e", "stats2.htm": "e"}
+ROOT_UP_RE = re.compile(r"^\.\./")
+# (page, original href) -> new href; None = no target exists: the link keeps its label, the image goes
+LINK_FIXES = {
+    ("demos/takeover98/main.htm", "to98res.zip"): "to98res.txt",          # the results file is the .txt
+    ("demos/volcanic5/3dgfx.htm", "wir98_3dgfx01_tmb.jpg"): "../wired98/wir98_3dgfx01_tmb.jpg",
+    ("demos/volcanic5/3dgfx.htm", "wir98_3dgfx03_tmb.jpg"): "../wired98/wir98_3dgfx03_tmb.jpg",
+    ("demos/volcanic5/3dgfx.htm", "wir98_3dgfx06_tmb.jpg"): "../wired98/wir98_3dgfx06_tmb.jpg",
+    ("e/faq.htm", "../archive/wrar202.zip"): None,                          # WinRAR 2.02: never in the archive
+    ("f/faq.htm", "../archive/wrar202.zip"): None,
+    ("groups/extravaganja.htm", "../handles/mr__splif1.htm"): "../handles/splif1.htm",
+    ("groups/melting_pot.htm", "../e/newjuice.htm"): "../e/news.html",
+    ("handles/handle_k.htm", "../e/reaction_kheops.htm"): None,             # only the French interview exists
+    ("handles/kheops2.htm", "../e/reaction_kheops.htm"): None,
+    ("parties_past.htm", "parties_come_overseas99.html"): None,             # no list for that party
+    ("parties_past.htm", "../../../ojuice/archive/ast97inv_eng.txt"): "archive/ast97inv_eng.txt",
+    ("tp8.htm", "photo1.htm"): None, ("tp8.htm", "photo1.jpg"): None,
+    ("tp8.htm", "photo2.htm"): None, ("tp8.htm", "photo2.jpg"): None,
+}
+LINK_TAG_RE = re.compile(r"""(?is)(<a\b[^>]*?\bhref\s*=\s*(["']?)([^"'>\s]+)\2[^>]*>)(.*?)</a\s*>""")
+IMG_SRC_RE = re.compile(r"""(?is)<img\b[^>]*?\bsrc\s*=\s*(["']?)([^"'>\s]+)\1[^>]*>""")
+
+
+def fix_links(ctx, text, rel):
+    """Repair what is broken in the source: relative nav links of the root pages, wrong paths, files that
+    never existed. Case-only mismatches are fixed later, once the list of published files is known."""
+    rel = out_rel(rel)
+    lang = ROOT_PAGES_LANG.get(rel)
+
+    def new_href(u):
+        if (rel, u) in LINK_FIXES:
+            return LINK_FIXES[(rel, u)], True
+        if rel.count("/") == 0 and ROOT_UP_RE.match(u):
+            return "/" + u[3:], True                # `../x` from a root page points outside the site
+        if lang and rel.count("/") == 0:
+            if re.match(r"^(?:news\.html|misc\.htm|faq\.htm|credits\.htm)(?:[#?].*)?$", u):
+                return "/%s/%s" % (lang, u), True
+        return u, False
+
+    def anchor(m):
+        u = m.group(3)
+        v, changed = new_href(u)
+        if not changed:
+            return m.group(0)
+        if v is None:
+            return m.group(4)
+        return m.group(0).replace(m.group(1), m.group(1).replace(u, v, 1), 1)
+
+    def img(m):
+        u = m.group(2)
+        v, changed = new_href(u)
+        if not changed:
+            return m.group(0)
+        return "" if v is None else m.group(0).replace(u, v, 1)
+    text = LINK_TAG_RE.sub(anchor, text)
+    return IMG_SRC_RE.sub(img, text)
+
+
+EXT_A_RE = re.compile(r"""(?is)<a\b(?:[^>"']|"[^"]*"|'[^']*')*>""")
+EXT_HREF_RE = re.compile(r"""(?is)\bhref\s*=\s*(?:"\s*([^"]*)"|'\s*([^']*)'|([^\s>]+))""")
+ATTR_DROP_RE = re.compile(r"""(?is)\s+(?:target|rel)\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+)""")
+
+
+def external_new_window(text):
+    """Every page lives in frames and many hosts refuse framing: external http/https/ftp links open in a new
+    tab (an existing target, `_top` included, is replaced). mailto: and internal links are left alone."""
+    def tag(m):
+        t = m.group(0)
+        h = EXT_HREF_RE.search(t)
+        u = (h.group(1) or h.group(2) or h.group(3) or "") if h else ""
+        if not re.match(r"(?i)^(?:https?|ftp)://", u.strip()):
+            return t
+        t = ATTR_DROP_RE.sub("", t)
+        return t[:-1].rstrip("/").rstrip() + ' target="_blank" rel="noopener">'
+    return EXT_A_RE.sub(tag, text)
+
+
+TITLES = {   # pages of the original without a <title> (the tab showed the URL)
+    "search.htm": "Orange Juice - Search (archived)", "chat_title.htm": "Orange Juice - Chat",
+    "rc5.html": "Orange Juice - RC5", "reb.htm": "Orange Juice - reb",
+    "archive/demopartymilia98.htm": "Demo Party MILIA 98 - call, themes and rules",
+}
+PARTY_STUB_RE = re.compile(r"^parties_come_([a-z0-9_-]+)\.htm$")
+
+
+def add_title(text, rel):
+    if re.search(r"(?i)<title\b", text):
+        return text
+    m = PARTY_STUB_RE.match(rel)
+    title = TITLES.get(rel) or ("Orange Juice - Who go to %s" % m.group(1) if m else None)
+    if not title:
+        return text
+    tag = "<TITLE>%s</TITLE>" % html.escape(title, quote=False)
+    h = re.search(r"(?i)<head[^>]*>", text)
+    if h:
+        return text[:h.end()] + "\n" + tag + text[h.end():]
+    return tag + "\n" + text
+
+
+VIEW_IMG_RE = re.compile(r'document\.write\("<IMG src=\\""\+GetCookie\(\)\+"\\" BORDER=0>"\);')
+VIEW_IMG_Q_RE = re.compile(r"""(document\.writeln\('<IMG src="' \+ location\.search\.substring\(1,128\) \+ '".*?</A>'\);)""", re.S)
+NO_PICTURE = '<FONT size="1" color="#808080">[ no picture selected: open one from a gallery ]</FONT>'
+
+
+def fix_view_img(text, rel):
+    """view_img.htm opened without a picture drew a broken image (`src` empty or `\\`): show a note instead."""
+    if rel.rsplit("/", 1)[-1] != "view_img.htm":
+        return text
+    text = VIEW_IMG_RE.sub('if (GetCookie()) { document.write("<IMG src=\\""+GetCookie()+"\\" BORDER=0>"); } '
+                           'else { document.write(%r); }' % NO_PICTURE, text)
+    text = VIEW_IMG_Q_RE.sub(lambda m: "if (location.search.length > 1) { %s } else { document.writeln(%r); }"
+                             % (m.group(1), NO_PICTURE), text)
+    return text
+
+
+CHAT_FOCUS_RE = re.compile(r"[ \t]*document\.f\.pseudo\.focus\(\);[ \t]*\r?\n?")
+
+
+NOINDEX_META_RE = re.compile(r'(?i)(<meta\s+name="robots"\s+content=")noindex(,follow">)')
+
+
 def convert_html(ctx, text, rel):
     def inc(m):
         p = ctx.site / m.group(1).lstrip("/")
@@ -672,13 +965,17 @@ def convert_html(ctx, text, rel):
     text = FORM_RE.sub(lambda m: archived_inline(rel), text)
     if not ctx.opts.keep_excluded_links:
         text = unlink_excluded(ctx, text, rel)
-    text = ICQ_IMG_RE.sub("", text)
+    text = ICQ_IMG_RE.sub(lambda m: ICQ_FLOWER % (m.group(1), m.group(1)), text)
     if rel in STATS_PAGES:
         text = redact_stats(text, ctx)
     if not ctx.opts.keep_emails:
-        text = redact_emails(text)
+        text = redact_emails(text, ctx, rel)
+    text = mask_phones(text)
     if not ctx.opts.birthdates_year:
         text = mask_birth_year(text)
+    text = fix_view_img(text, rel)
+    if out_rel(rel) == "chat.htm":
+        text = CHAT_FOCUS_RE.sub("", text)              # the chat form is gone: the script line raised an error
 
     def attr(m):
         val = m.group(3) if m.group(3) is not None else m.group(4)
@@ -687,6 +984,18 @@ def convert_html(ctx, text, rel):
     text = ATTR_RE.sub(attr, text)
     text = LOCATION_RE.sub(lambda m: m.group(1) + m.group(2) + rewrite_url(m.group(3), ctx) + m.group(2), text)
     text = TOP_REDIRECT_RE.sub("", text)
+    text = fix_links(ctx, text, rel)
+    text = external_new_window(text)
+    if out_rel(rel) == "birthdates.html":
+        text = NOINDEX_META_RE.sub(r"\1index\2", text)       # the birthday list is meant to be found
+    if out_rel(rel) == "f/hack.htm":
+        text = HACK_BGSOUND_RE.sub(lambda m: HACK_PLAYER_FMT % midi_hash(), text)
+        text = re.sub(r"(?i)(<body\b[^>]*>)", r'\1<div id="midi-host" style="position:relative;width:800px;max-width:100%">', text, count=1)   # 800 px page
+        text = re.sub(r"(?i)</body>", "</div></body>", text, count=1)
+    text = citeweb_crosslinks(text)
+    if out_rel(rel) in ("f/ojmenu.htm", "e/ojmenu.htm"):
+        text = menu_player(text)
+    text = add_title(text, out_rel(rel))
     return add_font_fallback(text)
 
 
@@ -709,9 +1018,109 @@ def looks_utf8(raw):
         return False
 
 
+def fix_case(text, rel, published, lower):
+    """Links that differ from the real file name only by case work on Windows and 404 on the CDN: use the real name."""
+    def attr(m):
+        val = m.group(3) if m.group(3) is not None else m.group(4)
+        if re.match(r"(?i)^[a-z][a-z0-9+.-]*:|^//|^#|^\$\$", val):
+            return m.group(0)
+        path, sep, rest = re.split(r"([?#])", val, maxsplit=1) if re.search(r"[?#]", val) else (val, "", "")
+        if not path:
+            return m.group(0)
+        t = os.path.normpath(path.lstrip("/") if path.startswith("/") else os.path.join(os.path.dirname(rel), path)).replace(os.sep, "/")
+        if t.startswith("..") or t in published or t.lower() not in lower:
+            return m.group(0)
+        real, segs, rsegs = lower[t.lower()], path.split("/"), lower[t.lower()].split("/")
+        for k in range(1, min(len(segs), len(rsegs)) + 1):
+            if segs[-k].lower() == rsegs[-k].lower():
+                segs[-k] = rsegs[-k]
+        q = m.group(2) or ""
+        return "%s=%s%s%s" % (m.group(1), q, "/".join(segs) + sep + rest, q)
+    return ATTR_RE.sub(attr, text)
+
+
+# ---- menu jukebox: the two dead Modplug <embed>s of ojmenu.htm become a small player (scripts/music/)
+MUSIC_SRC = REPO / "scripts" / "music"
+MENU_EMBED_RE = re.compile(r"<embed\b[^>]*\.mdz[^>]*>\s*", re.I)
+MENU_PLAYER = (
+    '<div id="oj-player" hidden style="width:130px;height:36px;background:#000;color:#FF8040;'
+    'font:10px/12px Verdana,DejaVu Sans,Geneva,sans-serif;overflow:hidden">'
+    '<div style="display:flex;align-items:center;gap:3px;height:20px">'
+    '<button type="button" data-act="play" aria-label="Play" style="width:30px;height:18px;padding:0;'
+    'background:#000;color:#FF8040;border:1px solid #FF8040;font:9px Verdana,sans-serif;cursor:pointer">&#9654;</button>'
+    '<button type="button" data-act="next" aria-label="Next track" title="Next track" style="width:26px;height:18px;'
+    'padding:0;background:#000;color:#FF8040;border:1px solid #FF8040;font:9px Verdana,sans-serif;cursor:pointer">&#9197;</button>'
+    '<input type="range" data-act="vol" min="0" max="100" value="70" aria-label="Volume" title="Volume" '
+    'style="width:60px;height:14px;margin:0;accent-color:#FF8040"></div>'
+    '<div data-act="name" style="height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div></div>'
+    '<noscript><a href="../archive/ojtheme.mdz">theme (.mdz)</a><br><a href="../archive/pressme.mdz">press me (.mdz)</a></noscript>\n'
+)
+
+
+HACK_BGSOUND_RE = re.compile(r"<bgsound\b[^>]*>", re.I)
+HACK_PLAYER_FMT = '<script src="/music/midi-player.js?v=%s" data-midi="Techno78.mid"></script>'
+
+
+def midi_hash():
+    import hashlib
+    return hashlib.sha1((MUSIC_SRC / "midi-player.js").read_bytes()).hexdigest()[:8]
+
+
+CITEWEB_RE = re.compile(r"(?i)\b((?:href|src)\s*=\s*[\"']?)https?://www\.citeweb\.net(?=[/\"'\s>])")
+
+
+def citeweb_crosslinks(text):
+    """Links to the old Citeweb host point to its archive, same path (owner decision 2026-11-24)."""
+    return CITEWEB_RE.sub(lambda m: m.group(1) + "https://citeweb97.sauthier.family", text)
+
+
+def music_hash():
+    import hashlib
+    return hashlib.sha1((MUSIC_SRC / "oj-player.js").read_bytes()).hexdigest()[:8]
+
+
+def menu_player(text):
+    """Replace the two Modplug embeds by the player widget and load its script (module, content-hashed URL)."""
+    state = {"n": 0}
+
+    def fn(m):
+        state["n"] += 1
+        return MENU_PLAYER if state["n"] == 1 else ""
+    text = MENU_EMBED_RE.sub(fn, text)
+    tag = '<script type="module" src="/music/oj-player.js?v=%s"></script>\n' % music_hash()
+    m = _BODY_END.search(text)
+    return text[:m.start()] + tag + text[m.start():] if m else text + tag
+
+
+def build_music(ctx):
+    """site/music/: the player, chiptune3 + libopenmpt, and the two modules unzipped from the original .mdz
+    (the .mdz stay served as they are, for download)."""
+    import zipfile
+    dst = ctx.out / "music"
+    dst.mkdir(parents=True, exist_ok=True)
+    for f in sorted(MUSIC_SRC.iterdir()):
+        if f.is_file():
+            shutil.copy2(f, dst / f.name)
+    for name in ("ojtheme", "pressme"):
+        with zipfile.ZipFile(ctx.site / "archive" / (name + ".mdz")) as z:
+            (dst / (name + ".xm")).write_bytes(z.read(name + ".xm"))
+
+
 # ------------------------------------------------------------------------- main
+def collect_nicks(ctx):
+    """Every handle sheet and group page names its nick in a size-6 heading: those names are not family names."""
+    names = set()
+    for sub in ("handles", "groups"):
+        for p in sorted((ctx.site / sub).glob("*.htm")):
+            if is_excluded(sub + "/" + p.name, ctx.globs):
+                continue
+            names |= {_base(n) for n in page_nicks(read_text(p))}
+    ctx.privacy.known_nicks = frozenset(n for n in names if len(n) >= 3)
+
+
 def run(ctx):
     site, out = ctx.site, ctx.out
+    collect_nicks(ctx)
     outputs = {}   # rel -> (encoding, text)
     for root, dirs, files in os.walk(site):
         dirs.sort()
@@ -743,14 +1152,25 @@ def run(ctx):
                 continue
             dst = out / rel
             dst.parent.mkdir(parents=True, exist_ok=True)
-            if not ctx.opts.keep_emails and low.endswith(".txt") and not looks_utf8(full.read_bytes()):
-                write_text(dst, redact_emails(read_text(full)))
+            own_data = rel.startswith(("news/", "data/")) and low.endswith(".txt")
+            if not ctx.opts.keep_emails and own_data and not looks_utf8(full.read_bytes()):
+                write_text(dst, redact_emails(read_text(full), ctx, rel))      # the site's own data files
             else:
-                shutil.copy2(full, dst)
+                shutil.copy2(full, dst)     # third-party files (demo texts, zips, modules): byte-identical
+                if low.endswith((".txt", ".nfo", ".diz")) and not own_data:
+                    t = read_text(full)
+                    if EMAIL_RE.search(t) or any(r.search(t) for r in PHONE_RES):
+                        ctx.third_party_personal.add(rel)
+            ctx.published.add(rel)
             ctx.copied += 1
 
+    ctx.published |= set(outputs)
+    lower = {p.lower(): p for p in ctx.published}
+    third = {os.path.basename(p).lower() for p in ctx.third_party_personal}
     for new_rel, (enc, text) in outputs.items():
-        if is_people_page(new_rel):
+        text = fix_case(text, new_rel, ctx.published, lower)
+        if (is_people_page(new_rel) or ctx.privacy.page_flag.get(new_rel)
+                or any(re.search(r'(?i)href\s*=\s*["\']?[^"\'>\s]*/?%s["\'>\s]' % re.escape(b), text) for b in third)):
             text = add_removal_note(text)
         dst = out / new_rel
         dst.parent.mkdir(parents=True, exist_ok=True)
@@ -805,6 +1225,7 @@ def main(argv=None):
     out.mkdir(parents=True, exist_ok=True)
 
     run(ctx)
+    build_music(ctx)
 
     meta = Path(opts.meta_dir)
     meta.mkdir(parents=True, exist_ok=True)
@@ -815,7 +1236,16 @@ def main(argv=None):
             lines.append("%s\t%s" % (old, new))
     (meta / "redirects.tsv").write_text("\n".join(lines) + "\n", encoding="ascii", errors="replace")
     (meta / "excluded.txt").write_text("\n".join(ctx.excluded) + "\n", encoding="utf-8")
+    # addresses published whole (nick, role, first name): verify_build.py allows exactly these
+    (meta / "kept-emails.txt").write_text("\n".join(sorted(ctx.privacy.kept)) + "\n", encoding="ascii", errors="replace")
+    review = REPO.parent / "OrangeJuice98-private" / "review-emails.txt"   # masked local parts: never committed
+    if review.parent.is_dir():
+        rows = ["%s\t%s\t%d page(s)" % (k, v, len(ctx.privacy.masked_pages[k])) for k, v in sorted(ctx.privacy.masked.items())]
+        review.write_text("# local part\tguess (pattern = looks like a family name, unknown = could be a nick)\n"
+                          + "\n".join(rows) + "\n", encoding="utf-8")
 
+    print("e-mail policy: %d addresses kept whole, %d local parts masked (%d look like nicks/unknown)"
+          % (len(ctx.privacy.kept), len(ctx.privacy.masked), sum(1 for v in ctx.privacy.masked.values() if v == "unknown")))
     print("rendered %d ASP pages (+%d party pages); copied %d files; excluded %d; redirects: %d"
           % (len(ctx.rendered), sum(1 for p in party_files(site)), ctx.copied, len(ctx.excluded), len(lines)))
     if ctx.stats_masked:

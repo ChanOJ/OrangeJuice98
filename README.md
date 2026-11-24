@@ -45,6 +45,29 @@ plain HTML; the reverse-engineered data model is in [`docs/data-model.md`](docs/
 - Personal data redacted, keeping the original layout: birth years (`26/12/????`), e-mail
   domains (`nick@????`), onliner browser/host fields, visitor IPs and hosts in the stats pages.
   Logins, logs and ASP sources are never published (`scripts/exclude-globs.txt`).
+- E-mail addresses on the people pages (`handles/`, `groups/`): too many to sort by hand, so every address keeps
+  its domain and shows only the first and last letter of the local part (`l******t@domain.com`).
+- E-mail addresses elsewhere: the domain is masked (`local@????`) only when the part before the `@` holds a family
+  name. A handle (the page's own, or any handle or group of the site), a role address and a first name keep
+  the full address; everything else is masked. Addresses kept whole are listed in `build-meta/kept-emails.txt`
+  (`scripts/verify_build.py` allows exactly those), event and team addresses in `scripts/email-keep.txt`.
+- Phone numbers (BBS lists, a job ad, an old news item) keep their prefix; the last four digits are `?`.
+- ICQ: the UIN, its pager link and the "ICQ state :" label stay. The live presence badge (a dead host) is
+  replaced by the site's own red offline flower (`pictures/icqoff.gif`, as in the legend), so no request goes to an ICQ server.
+- External links keep their original `href` (only counters, forms and the old search engine are gone) and
+  open in a new tab (`target="_blank" rel="noopener"`), as many hosts refuse to be framed.
+- Links that were broken in the original are repaired (wrong paths, case, root pages that pointed outside the
+  site) or lose their link when the target never existed (`LINK_FIXES` in `scripts/statify.py`).
+  `view_img.htm` opened without a picture shows a note instead of a broken image.
+- The two Modplug players of the menu (dead plug-in) are replaced by a small jukebox: see *Music* below.
+- Third-party text files (demo results, `.nfo`) are copied byte-identical; the pages that link one that holds
+  an address or phone number carry the removal footer.
+- `f/hack.htm` (a 1999 prank page, linked from `f/newsold.html`) played `Techno78.mid` through the IE-only
+  `<bgsound>`: it now loads `site/music/midi-player.js`, a small Web Audio MIDI player (no soundfont), with a
+  play/stop button; the music starts at the first click or key press and loops.
+- Links to `www.citeweb.net` point to https://citeweb97.sauthier.family, same path.
+- `birthdates.html` is indexable.
+- `demos/p2b5/pbzip.zip` (a stale source copy of the P2B5 pages, linked nowhere) is not published.
 - `face="verdana"` gets sans-serif fallbacks (`DejaVu Sans, Geneva, sans-serif`) for systems
   without Verdana.
 - `birthdates.shtml` and two demo pages come from a second copy of the site that had newer
@@ -63,12 +86,12 @@ originals (with logins and logs) live **outside the repository**, in
 python3 scripts/statify.py && python3 scripts/verify_build.py
 ```
 
-, `infra/main.tf`)
+## Hardening at the edge (`infra/main.tf`)
 
 - Edge rule 1: any method other than GET, HEAD, OPTIONS is blocked at the edge, before the
   origin (bunny.net answers 403; edge rules cannot return 405). `block_post_requests` is also on.
 - Edge rule 2: `Content-Security-Policy` (same-origin, inline script/style allowed for the 1998
-  HTML, frames same-origin only, `form-action 'none'`), `X-Content-Type-Options: nosniff`,
+  HTML, `wasm-unsafe-eval` and `connect-src 'self'` for the menu jukebox, frames same-origin only, `form-action 'none'`), `X-Content-Type-Options: nosniff`,
   `X-Frame-Options: SAMEORIGIN` (the frames layout still works), `Referrer-Policy`, HSTS,
   `Permissions-Policy`.
 - Edge rules 3-4: `Content-Type` with `charset=iso-8859-1` for `.htm/.html/.shtml` and
@@ -76,14 +99,28 @@ python3 scripts/statify.py && python3 scripts/verify_build.py
 - Edge rule 5: browser cache 7 days for images and archives, 1 hour for pages; CDN cache 30
   days, purged on each deployment.
 - Archives (`rar zip mdz mts mid`): `application/octet-stream` + `Content-Disposition: attachment`.
-- COOP/CORP `same-origin`. Search engines are allowed (no `X-Robots-Tag`, no `robots.txt`).
+- COOP/CORP `same-origin`. Search engines are allowed (no `X-Robots-Tag`; `robots.txt` allows everything and `sitemap.xml` is served).
 - CI (deploy workflow), before upload: excluded-paths check, `scripts/verify_build.py --build site` and a ClamAV scan of `site/`.
 - Cookies are stripped before the origin; TLS "Compatible"; forced HTTPS.
 - Custom 404: `hosting/404.html` (`not_found_page` in `site.json`).
 
+## Music
+
+The menu frame (`/f/ojmenu.htm`, `/e/ojmenu.htm`) had two Modplug plug-in players (`archive/ojtheme.mdz`,
+`archive/pressme.mdz`, `autostart=false`). They are replaced by a 130x36 player: play/pause, next track, volume.
+Nothing plays until the visitor clicks; the second track follows the first. `scripts/music/` holds the player
+(`oj-player.js`) and chiptune3 with libopenmpt (copied from the LTP4
+site; MIT, and BSD for libopenmpt, see `scripts/music/LICENSE.txt`); the build copies them to `site/music/` and
+unzips the two modules there as `.xm` (the `.mdz` stay for download). WebAssembly needs the CSP change in
+`infra/main.tf` (an infra apply after the merge).
+
 ## Removal requests
 
-Pages that list or describe people end with a small footer, "To be removed from this page, contact me." (a `mailto:` link). `scripts/statify.py` adds it (`is_people_page`), so it survives rebuilds; `scripts/verify_build.py` leaves it out of its `mailto:` and e-mail checks.
+Pages that show personal data end with a small footer, "To be removed from this page, contact me." (a
+`mailto:` link, 630 px wide, left-aligned like the pages). `scripts/statify.py` adds it on the pages with real names
+(`is_people_page`), on pages where an address keeps a first name or is masked, and on pages that link a
+third-party file holding addresses or phone numbers. Pages with handles only, role addresses or no personal data
+have none. It survives rebuilds; `scripts/verify_build.py` leaves it out of its `mailto:` and e-mail checks.
 
 ## Deploying
 
@@ -143,10 +180,13 @@ If the apply rejects an edge rule or the 404 path, set it by hand (CDN > pull zo
 
 ## To Do
 
-Cross-links to fix in a batch pass (the targets are archived on `sauthier.family`; rewrite the `href`s):
+Cross-links to fix in a batch pass (the targets are archived on `sauthier.family`; rewrite the `href`s). Counts
+are `href`/`src` attributes in `site/` (2026-11-24):
 
-- `ojuice.citeweb.net` (7 links in 7 files): original address of this site, point to the archive's own pages.
-- `www.citeweb.net` (26 links in 11 files) and `*.citeweb.net` member sites: Citeweb97 (https://citeweb97.sauthier.family), same paths.
-- `ribbon.citeweb.net` (16 links in 3 files): https://citeweb97.sauthier.family/ribbon/.
-- `ltp.planet-d.net` (10 links in 5 files): LTP3 (https://ltp3.sauthier.family).
+- `ojuice.citeweb.net`: no link left (the 3 handle homepages now point to `/`); the old address still shows as text
+  in the `<title>` of most pages and in a few `alt`s.
+- `*.citeweb.net` member sites (`arfparty` 6, `defcon` 6, `mentagen` 3, `froggy` 3, ...): Citeweb97 (https://citeweb97.sauthier.family), same paths. (`www.citeweb.net` is done.)
+- `ribbon.citeweb.net` (16 links in 4 files): https://citeweb97.sauthier.family/ribbon/.
+- `ltp.planet-d.net` (10 links in 7 files): LTP3 (https://ltp3.sauthier.family).
 - `bomb.planet-d.net` (4 links in 4 files): Bomb98 (https://bomb98.sauthier.family).
+- Other `*.planet-d.net` member sites (`trashcan` 3, `www.planet-d.net` 4, ...): to sort out.
