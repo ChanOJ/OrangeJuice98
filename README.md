@@ -45,7 +45,9 @@ plain HTML; the reverse-engineered data model is in [`docs/data-model.md`](docs/
 - Personal data redacted, keeping the original layout: birth years (`26/12/????`), e-mail
   domains (`nick@????`), onliner browser/host fields, visitor IPs and hosts in the stats pages.
   Logins, logs and ASP sources are never published (`scripts/exclude-globs.txt`).
-- E-mail addresses: the domain is masked (`local@????`) only when the part before the `@` holds a family
+- E-mail addresses on the people pages (`handles/`, `groups/`): too many to sort by hand, so every address keeps
+  its domain and shows only the first and last letter of the local part (`l******t@domain.com`).
+- E-mail addresses elsewhere: the domain is masked (`local@????`) only when the part before the `@` holds a family
   name. A handle (the page's own, or any handle or group of the site), a role address and a first name keep
   the full address; everything else is masked. Addresses kept whole are listed in `build-meta/kept-emails.txt`
   (`scripts/verify_build.py` allows exactly those), event and team addresses in `scripts/email-keep.txt`.
@@ -60,6 +62,11 @@ plain HTML; the reverse-engineered data model is in [`docs/data-model.md`](docs/
 - The two Modplug players of the menu (dead plug-in) are replaced by a small jukebox: see *Music* below.
 - Third-party text files (demo results, `.nfo`) are copied byte-identical; the pages that link one that holds
   an address or phone number carry the removal footer.
+- `f/hack.htm` (a 1999 prank page, linked from `f/newsold.html`) played `Techno78.mid` through the IE-only
+  `<bgsound>`: it now loads `site/music/midi-player.js`, a small Web Audio MIDI player (no soundfont), with a
+  play/stop button; the music starts at the first click or key press and loops.
+- Links to `www.citeweb.net` point to https://citeweb97.sauthier.family, same path.
+- `birthdates.html` is indexable.
 - `demos/p2b5/pbzip.zip` (a stale source copy of the P2B5 pages, linked nowhere) is not published.
 - `face="verdana"` gets sans-serif fallbacks (`DejaVu Sans, Geneva, sans-serif`) for systems
   without Verdana.
@@ -110,7 +117,7 @@ unzips the two modules there as `.xm` (the `.mdz` stay for download). WebAssembl
 ## Removal requests
 
 Pages that show personal data end with a small footer, "To be removed from this page, contact me." (a
-`mailto:` link, as wide as the site's 630 px column). `scripts/statify.py` adds it on the pages with real names
+`mailto:` link, 630 px wide, left-aligned like the pages). `scripts/statify.py` adds it on the pages with real names
 (`is_people_page`), on pages where an address keeps a first name or is masked, and on pages that link a
 third-party file holding addresses or phone numbers. Pages with handles only, role addresses or no personal data
 have none. It survives rebuilds; `scripts/verify_build.py` leaves it out of its `mailto:` and e-mail checks.
@@ -178,8 +185,7 @@ are `href`/`src` attributes in `site/` (2026-11-24):
 
 - `ojuice.citeweb.net`: no link left (the 3 handle homepages now point to `/`); the old address still shows as text
   in the `<title>` of most pages and in a few `alt`s.
-- `www.citeweb.net` (26 links in 13 files) and `*.citeweb.net` member sites (`arfparty` 6, `defcon` 6, `mentagen` 3,
-  `froggy` 3, ...): Citeweb97 (https://citeweb97.sauthier.family), same paths.
+- `*.citeweb.net` member sites (`arfparty` 6, `defcon` 6, `mentagen` 3, `froggy` 3, ...): Citeweb97 (https://citeweb97.sauthier.family), same paths. (`www.citeweb.net` is done.)
 - `ribbon.citeweb.net` (16 links in 4 files): https://citeweb97.sauthier.family/ribbon/.
 - `ltp.planet-d.net` (10 links in 7 files): LTP3 (https://ltp3.sauthier.family).
 - `bomb.planet-d.net` (4 links in 4 files): Bomb98 (https://bomb98.sauthier.family).

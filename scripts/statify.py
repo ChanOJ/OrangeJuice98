@@ -35,8 +35,8 @@ HOSTS_SELF = r"(?:ojuice\.citeweb\.net|www\.citeweb\.net/ojuice)"
 # personal data do not get it. Its width is the site's own column (630 px tables), centred.
 REMOVAL_MARK = 'id="removal-note"'
 REMOVAL_NOTE = (
-    '<div id="removal-note" style="clear:both;margin:28px auto 8px;padding:6px 8px 0;width:630px;max-width:96%;'
-    'box-sizing:border-box;border-top:1px solid #808080;text-align:center;'
+    '<div id="removal-note" style="clear:both;margin:28px 0 8px 10px;padding:6px 8px 0;width:630px;max-width:96%;'
+    'box-sizing:border-box;border-top:1px solid #808080;text-align:left;'
     'font:10px/14px Verdana,Arial,Helvetica,sans-serif;'
     'color:#808080;background:transparent">To be removed from this page, '
     '<a href="mailto:chandra_oj&#64;pm.me" style="color:#808080;text-decoration:underline">contact me</a>.</div>'
@@ -613,7 +613,9 @@ EMAIL_RE = re.compile(r"([A-Za-z0-9._+-]+)@([A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+)")
 # the part left of the `@` holds a family name. A nick (the handle of the page, or a role address) and a
 # first name alone keep the full address. Anything else (family names, initials + name, unknown words) is
 # masked: that is the safe default, and the doubtful ones are listed for the owner in `review-emails.txt`
-# (outside the repository).
+# (outside the repository). Exception (owner decision 2026-11-24): on the people pages (handles/, groups/) there
+# are too many to sort by hand, so every address there keeps its domain and shows only the first and last
+# letter of the local part (`l******t@domain.com`).
 ROLE_LOCALS = {"ojuice", "orangejuice", "info", "infos", "contact", "webmaster", "tech", "admin", "support",
                "sales", "office", "jobs", "mail", "postmaster", "press", "staff", "news", "request",
                "orangejuice-request", "hostmaster", "abuse", "help", "organisation", "organizers"}
@@ -713,16 +715,22 @@ def redact_emails(text, ctx=None, rel=""):
     nicks = page_nicks(text) if rel.startswith(("handles/", "groups/")) else set()
     priv = ctx.privacy if ctx is not None else Privacy()
 
+    people = rel.startswith(("handles/", "groups/"))
+
+    def star(local):
+        return local[0] + "*" * (len(local) - 2) + local[-1] if len(local) > 2 else local[0] + "*" * (len(local) - 1)
+
     def decide(local, domain):
+        """True: keep whole; False: `local@????`; None (people pages): `l****t@domain`."""
         kind = email_kind(local, nicks, priv.known_nicks)
+        if kind in ("masked", "first") and rel:
+            priv.page_flag[out_rel(rel)] = True
+        if people:
+            return None
         if kind == "masked":
             priv.masked.setdefault(local.lower(), classify_masked(local))
             priv.masked_pages.setdefault(local.lower(), set()).add(rel)
-            if kind == "masked" and rel:
-                priv.page_flag[out_rel(rel)] = True
             return False
-        if kind == "first" and rel:
-            priv.page_flag[out_rel(rel)] = True
         priv.kept.add(("%s@%s" % (local, domain)).lower())
         return True
 
@@ -734,10 +742,13 @@ def redact_emails(text, ctx=None, rel=""):
     text = MAILTO_A_RE.sub(anchor, text)
 
     def addr(m):
-        return m.group(0) if decide(m.group(1), m.group(2)) else m.group(1) + "@" + MASK
+        r = decide(m.group(1), m.group(2))
+        if r is True:
+            return m.group(0)
+        return star(m.group(1)) + "@" + m.group(2) if r is None else m.group(1) + "@" + MASK
     text = EMAIL_RE.sub(addr, text)
     # mailto: left in front of an address that has just been masked (a tag the anchor regex did not match)
-    return re.sub(r"(?i)mailto:(?=[^\"'>\s]*@\?\?\?\?)", "", text)
+    return re.sub(r"(?i)mailto:(?=[^\"'>\s]*(?:@\?\?\?\?|\*+[^@\"'>\s]@))", "", text)
 
 
 # Phone numbers (BBS lists, a job ad, an old news item): the last four digits are masked, the rest stays.
@@ -940,6 +951,9 @@ def fix_view_img(text, rel):
 CHAT_FOCUS_RE = re.compile(r"[ \t]*document\.f\.pseudo\.focus\(\);[ \t]*\r?\n?")
 
 
+NOINDEX_META_RE = re.compile(r'(?i)(<meta\s+name="robots"\s+content=")noindex(,follow">)')
+
+
 def convert_html(ctx, text, rel):
     def inc(m):
         p = ctx.site / m.group(1).lstrip("/")
@@ -972,6 +986,11 @@ def convert_html(ctx, text, rel):
     text = TOP_REDIRECT_RE.sub("", text)
     text = fix_links(ctx, text, rel)
     text = external_new_window(text)
+    if out_rel(rel) == "birthdates.html":
+        text = NOINDEX_META_RE.sub(r"\1index\2", text)       # the birthday list is meant to be found
+    if out_rel(rel) == "f/hack.htm":
+        text = HACK_BGSOUND_RE.sub(lambda m: HACK_PLAYER_FMT % midi_hash(), text)
+    text = citeweb_crosslinks(text)
     if out_rel(rel) in ("f/ojmenu.htm", "e/ojmenu.htm"):
         text = menu_player(text)
     text = add_title(text, out_rel(rel))
@@ -1034,6 +1053,23 @@ MENU_PLAYER = (
     '<div data-act="name" style="height:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div></div>'
     '<noscript><a href="../archive/ojtheme.mdz">theme (.mdz)</a><br><a href="../archive/pressme.mdz">press me (.mdz)</a></noscript>\n'
 )
+
+
+HACK_BGSOUND_RE = re.compile(r"<bgsound\b[^>]*>", re.I)
+HACK_PLAYER_FMT = '<script src="/music/midi-player.js?v=%s" data-midi="Techno78.mid"></script>'
+
+
+def midi_hash():
+    import hashlib
+    return hashlib.sha1((MUSIC_SRC / "midi-player.js").read_bytes()).hexdigest()[:8]
+
+
+CITEWEB_RE = re.compile(r"(?i)\b((?:href|src)\s*=\s*[\"']?)https?://www\.citeweb\.net(?=[/\"'\s>])")
+
+
+def citeweb_crosslinks(text):
+    """Links to the old Citeweb host point to its archive, same path (owner decision 2026-11-24)."""
+    return CITEWEB_RE.sub(lambda m: m.group(1) + "https://citeweb97.sauthier.family", text)
 
 
 def music_hash():

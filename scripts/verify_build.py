@@ -42,7 +42,7 @@ LEFTOVERS = [
     ("birth year in handle sheet", re.compile(r"(?is)birthdate\s*<font[^>]*>\(dd/mm/yyyy\)</font>:\s*<br>\s*<font[^>]*>\s*\d{1,2}/\d{1,2}/\d{2,4}\s*<")),
 ]
 MAILTO_ADDR = re.compile(r"(?i)mailto:([^\"'>\s?]*)")
-EMAIL_ADDR = re.compile(r"[A-Za-z0-9._+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")
+EMAIL_ADDR = re.compile(r"(?<![*A-Za-z0-9._+-])[A-Za-z0-9._+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+")
 # Third-party text files (demo results, .nfo) are published byte-identical: only the site's own data is scanned.
 OWN_TXT = ("news/", "data/")
 # The removal-request footer (statify.py) carries the only mailto: of the site: leave it out of the leftovers scan.
