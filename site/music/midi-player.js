@@ -114,15 +114,15 @@
       var data = noise.getChannelData(0); for (var i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
     }
     ctx.resume(); playing = true; idx = 0; held = {}; programs = []; base = ctx.currentTime + 0.1;
-    timer = setInterval(pump, 100); btn.textContent = '❚❚ music'; btn.dataset.state = 'playing';
+    timer = setInterval(pump, 100); btn.textContent = '\u275A\u275A music'; btn.dataset.state = 'playing';
   }
   function stop() {
-    playing = false; clearInterval(timer); btn.textContent = '▶ music'; btn.dataset.state = 'stopped';
+    playing = false; clearInterval(timer); btn.textContent = '\u25B6 music'; btn.dataset.state = 'stopped';
     if (ctx) { ctx.close(); ctx = null; }
   }
 
   var btn = document.createElement('button');
-  btn.type = 'button'; btn.textContent = '▶ music';
+  btn.type = 'button'; btn.textContent = '\u25B6 music';
   btn.style.cssText = 'position:fixed;right:8px;bottom:8px;background:#000;color:#FF8040;border:1px solid #FF8040;font:11px Verdana,sans-serif;padding:3px 8px;cursor:pointer;z-index:9';
   btn.addEventListener('click', function (ev) { ev.stopPropagation(); playing ? stop() : start(); });
   var first = function (ev) { if (ev && ev.target === btn) return; document.removeEventListener('pointerdown', first); document.removeEventListener('keydown', first); if (!playing && btn.dataset.state !== 'stopped') start(); };

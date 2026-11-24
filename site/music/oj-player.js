@@ -25,7 +25,7 @@ if (box && window.AudioContext && window.AudioWorklet) {
   let player = null, ready = false, index = 0, current = -1, state = 'stopped'; // stopped | playing | paused
 
   const paint = () => {
-    play.textContent = state === 'playing' ? '❚❚' : '▶';
+    play.textContent = state === 'playing' ? '\u275A\u275A' : '\u25B6';
     play.setAttribute('aria-label', state === 'playing' ? 'Pause' : 'Play');
     label.textContent = TRACKS[index].name;
     box.dataset.state = state;

@@ -990,6 +990,8 @@ def convert_html(ctx, text, rel):
         text = NOINDEX_META_RE.sub(r"\1index\2", text)       # the birthday list is meant to be found
     if out_rel(rel) == "f/hack.htm":
         text = HACK_BGSOUND_RE.sub(lambda m: HACK_PLAYER_FMT % midi_hash(), text)
+        text = re.sub(r"(?i)(<body\b[^>]*>)", r'\1<div style="width:800px;max-width:100%">', text, count=1)   # 800 px page
+        text = re.sub(r"(?i)</body>", "</div></body>", text, count=1)
     text = citeweb_crosslinks(text)
     if out_rel(rel) in ("f/ojmenu.htm", "e/ojmenu.htm"):
         text = menu_player(text)
