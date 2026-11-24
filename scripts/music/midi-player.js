@@ -123,12 +123,12 @@
 
   var btn = document.createElement('button');
   btn.type = 'button'; btn.textContent = '\u25B6 music';
-  btn.style.cssText = 'position:fixed;right:8px;bottom:8px;background:#000;color:#FF8040;border:1px solid #FF8040;font:11px Verdana,sans-serif;padding:3px 8px;cursor:pointer;z-index:9';
+  btn.style.cssText = 'position:absolute;right:8px;top:8px;background:#000;color:#FF8040;border:1px solid #FF8040;font:11px Verdana,sans-serif;padding:3px 8px;cursor:pointer;z-index:9';
   btn.addEventListener('click', function (ev) { ev.stopPropagation(); playing ? stop() : start(); });
   var first = function (ev) { if (ev && ev.target === btn) return; document.removeEventListener('pointerdown', first); document.removeEventListener('keydown', first); if (!playing && btn.dataset.state !== 'stopped') start(); };
   document.addEventListener('pointerdown', first); document.addEventListener('keydown', first);
 
   fetch(url).then(function (r) { if (!r.ok) throw new Error(r.status); return r.arrayBuffer(); })
-    .then(function (b) { song = parse(b); document.body.appendChild(btn); })
+    .then(function (b) { song = parse(b); (document.getElementById('midi-host') || document.body).appendChild(btn); })
     .catch(function () { /* no music: the page still works */ });
 })();
