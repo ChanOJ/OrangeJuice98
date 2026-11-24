@@ -602,10 +602,10 @@ def redact_stats(text, ctx=None):
 
 
 # ICQ presence badge (`online.mirabilis.com/scripts/online.dll?icq=<uin>`, a live image from a dead host): replaced
-# by the site's own grey flower (pictures/icqdis.gif, the "hidden" badge of the legend), hard-coded, so no request
+# by the site's own red (offline) flower (pictures/icqoff.gif, the red "offline" flower of the legend), hard-coded, so no request
 # goes to any ICQ server. The UIN, its pager link and the "ICQ state :" label stay as in the original.
 ICQ_IMG_RE = re.compile(r"<img\b[^>]*online\.mirabilis\.com/[^>]*icq=(\d+)[^>]*>", re.I)
-ICQ_FLOWER = '<IMG src="/pictures/icqdis.gif" align="top" width="18" height="18" border="0" alt="ICQ #%s" title="ICQ #%s">'
+ICQ_FLOWER = '<IMG src="/pictures/icqoff.gif" align="top" width="18" height="18" border="0" alt="ICQ #%s" title="ICQ #%s">'
 MAILTO_A_RE = re.compile(r"<a\b[^>]*href\s*=\s*[\"']?mailto:([^\"'>\s?]*)[^>]*>(.*?)</a\s*>", re.I | re.S)
 EMAIL_RE = re.compile(r"([A-Za-z0-9._+-]+)@([A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+)")
 
