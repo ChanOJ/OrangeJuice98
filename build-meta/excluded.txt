@@ -23,6 +23,7 @@ data/#onliner_hist.txt
 data/#reverse.txt
 demos/title.inc
 demos/ltp2/.picasa.ini
+demos/p2b5/pbzip.zip
 demos/takeover98/.picasa.ini
 demos/volcanic3/.picasa.ini
 handles/pictures/.picasa.ini

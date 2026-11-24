@@ -1,5 +1,5 @@
 ftp://skynet.stack.nl/
 _top
 l'Archive Skynet
-Le ftp était inaccessible à cause d'une mise à jour de l'OS. Nous espérons que ca n'a pas posé trop de problèmes aux groupes que nous hébergeons et nous excusons de ne pas avoir prévenu de cette mise à jour. <I>(Redhound)</I>
+Le ftp était inaccessible à cause d'une mise à jour de l'OS. Nous espérons que ca n'a pas posé trop de problèmes aux groupes que nous hébergeons et nous excusons de ne pas avoir prévenu de cette mise à jour. <I>(<A href="mailto:redhound@scene.org">Redhound</A>)</I>
 chandra

@@ -11,3 +11,6 @@ Thumbs.db
 data/#*
 # newswriters' credentials (scrambled passwords) and e-mails
 news/logins.txt
+
+# stale source copy: 14 unredacted 1997 pages of the P2B5 demos (no page links it)
+demos/p2b5/pbzip.zip

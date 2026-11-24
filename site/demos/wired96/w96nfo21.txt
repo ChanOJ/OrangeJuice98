@@ -477,9 +477,9 @@
  ÖÄÄÄÄÄÄÄÄÄ  ÄÄ  ú   ú ÄÄ ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ ÄÄ ú    ú  ÄÄ  ÄÄÄÄÄÄÄÄ·
  ÓÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ  ÄÄ  ú                          ú  ÄÄ  ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ½
 
-  E-mail:        Darkness/Imphobia: darkness@????
-		    Access/Antares: access@????
-	  Sleeping Dog/The Natives: sdog@????
+  E-mail:        Darkness/Imphobia: darkness@genesis.be
+		    Access/Antares: access@pctrading.be
+	  Sleeping Dog/The Natives: sdog@uly2.arts.kuleuven.ac.be
 
   Modem:                    Edge Of Delight
 		  Node #1: +32-2-375-5651 US Robotics 28.8K
@@ -507,7 +507,7 @@
 
   If you want to be informed about forthcoming Wired info, you can subscribe
   to the Wired'96 mailing-list:
-  Send a email to wired-list@????
+  Send a email to wired-list@pctrading.be
   and write in the body of the message: subscribe wired-list
   Subject don't matter.
 

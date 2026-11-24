@@ -9,7 +9,7 @@
  <FONT face="Verdana, DejaVu Sans, Geneva, sans-serif" size="1">click on the picture to go back<BR>
  <SCRIPT language="JavaScript"><!--
  document.write("<BR><A HREF=\"javascript:history.back()\">");
- document.writeln('<IMG src="' + location.search.substring(1,128) + '" BORDER="0" ALT="if you don&#39;t see the picture, try right clicking here and select &#34;view image&#34;"></A>');
+ if (location.search.length > 1) { document.writeln('<IMG src="' + location.search.substring(1,128) + '" BORDER="0" ALT="if you don&#39;t see the picture, try right clicking here and select &#34;view image&#34;"></A>'); } else { document.writeln('<FONT size="1" color="#808080">[ no picture selected: open one from a gallery ]</FONT>'); }
  // --></SCRIPT>
  </FONT>
 </CENTER>

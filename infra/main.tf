@@ -82,11 +82,14 @@ locals {
   # scripts/styles are everywhere in 1998 HTML, hence 'unsafe-inline'.
   # form-action 'none': the old forms (guestbook, search, add handle) must
   # never submit anywhere.
+  # The menu jukebox (site/music, chiptune3 + libopenmpt) needs WebAssembly
+  # ('wasm-unsafe-eval'), an AudioWorklet from the site itself, and fetches its
+  # two .xm modules from the site (connect-src 'self').
   # img-src keeps http:/https: only while legacy remote images remain in the
   # pages (most hosts are dead; drop it if the build strips them).
   csp = join("; ", [
     "default-src 'self'",
-    "script-src 'self' 'unsafe-inline'",
+    "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: http: https:",
     "media-src 'self'",
@@ -96,7 +99,7 @@ locals {
     "frame-ancestors 'self'",
     "form-action 'none'",
     "base-uri 'self'",
-    "connect-src 'none'",
+    "connect-src 'self'",
   ])
 
   archive_extensions = ["rar", "zip", "mdz", "mts", "mid"]

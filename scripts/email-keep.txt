@@ -1,0 +1,27 @@
+# Local parts published with their full address although they are not a handle of the site: addresses of
+# parties, magazines, groups and teams (role addresses). One lower-case local part per line.
+# Everything else that is not a handle, a role or a first name stays masked (`local@????`): see
+# scripts/statify.py (e-mail policy). Add a line here when the owner confirms an address is not a family name.
+abd-org
+abort97
+amb98
+antiq
+arfparty
+askme
+assembly
+bizarre
+centralparty
+cocoonsystem
+demo.milia
+demojournal
+demoscener
+linfo70
+ltp
+newsdee
+orangejuice-request
+powercp
+scc_org
+scene
+siliconvention
+team
+wired-request

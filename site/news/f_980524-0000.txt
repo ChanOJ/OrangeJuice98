@@ -1,5 +1,5 @@
-wired-request@?????subject=subscribe
+mailto:wired-request@wpartners.com?subject=subscribe
 
 La mailing list de la Wired'98
-Pour être sûr d'être au courrant de toutes les dernières infos sur la Wired'98, inscrivez vous à la mailing list Wired en envoyant un email à wired-request@???? avec comme SUJET de message "subscribe" (sans les " ") . Les personnes qui étaient inscrites dans la mailing list de l'année passée doivent se réinscrire.
+Pour être sûr d'être au courrant de toutes les dernières infos sur la Wired'98, inscrivez vous à la mailing list Wired en envoyant un email à <A href="mailto:wired-request@wpartners.com?subject=subscribe">wired-request@wpartners.com</A> avec comme SUJET de message "subscribe" (sans les " ") . Les personnes qui étaient inscrites dans la mailing list de l'année passée doivent se réinscrire.
 chandra
