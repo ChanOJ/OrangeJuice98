@@ -601,15 +601,11 @@ def redact_stats(text, ctx=None):
     return re.sub(r"(?<![\d.])(?:\d{1,3}\.){3}\d{1,3}(?![\d.])", MASK, text)
 
 
-# ICQ field of the handle sheets: `ICQ state : <a href=wwp.mirabilis.com/...><img online.mirabilis.com/...></a>`.
-# Both hosts are dead and the badge was a live presence image, so the whole field goes (label, link and badge):
-# keeping only the label or an empty anchor would leave a dangling "ICQ state :" with nothing to click.
-ICQ_FIELD_RE = re.compile(r"<font\b[^>]*>\s*<a\b[^>]*www\.icq\.com[^>]*>ICQ</a>\s*state\s*:\s*"
-                          r"<a\b[^>]*mirabilis\.com[^>]*>(?:<img\b[^>]*>)?</a>\s*</font>", re.I | re.S)
-ICQ_EMPTY_A_RE = re.compile(r"<a\b[^>]*mirabilis\.com[^>]*>\s*</a>[ \t]*", re.I)   # pager link left empty by the badge removal
-ICQ_LEGEND_RE = re.compile(r"<a\b[^>]*www\.icq\.com[^>]*>ICQ</a>\s*state\s*:\s*<br>.*?"
-                           r"add the scener to your ICQ contact list\)</i></font>\s*", re.I | re.S)   # legend of the badges
-ICQ_IMG_RE = re.compile(r"<img\b[^>]*online\.mirabilis\.com[^>]*>", re.I)   # any other ICQ presence badge
+# ICQ presence badge (`online.mirabilis.com/scripts/online.dll?icq=<uin>`, a live image from a dead host): replaced
+# by the site's own grey flower (pictures/icqdis.gif, the "hidden" badge of the legend), hard-coded, so no request
+# goes to any ICQ server. The UIN, its pager link and the "ICQ state :" label stay as in the original.
+ICQ_IMG_RE = re.compile(r"<img\b[^>]*online\.mirabilis\.com/[^>]*icq=(\d+)[^>]*>", re.I)
+ICQ_FLOWER = '<IMG src="/pictures/icqdis.gif" align="top" width="18" height="18" border="0" alt="ICQ #%s" title="ICQ #%s">'
 MAILTO_A_RE = re.compile(r"<a\b[^>]*href\s*=\s*[\"']?mailto:([^\"'>\s?]*)[^>]*>(.*?)</a\s*>", re.I | re.S)
 EMAIL_RE = re.compile(r"([A-Za-z0-9._+-]+)@([A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+)")
 
@@ -955,10 +951,7 @@ def convert_html(ctx, text, rel):
     text = FORM_RE.sub(lambda m: archived_inline(rel), text)
     if not ctx.opts.keep_excluded_links:
         text = unlink_excluded(ctx, text, rel)
-    text = ICQ_FIELD_RE.sub("", text)
-    text = ICQ_LEGEND_RE.sub("", text)
-    text = ICQ_IMG_RE.sub("", text)
-    text = ICQ_EMPTY_A_RE.sub("", text)
+    text = ICQ_IMG_RE.sub(lambda m: ICQ_FLOWER % (m.group(1), m.group(1)), text)
     if rel in STATS_PAGES:
         text = redact_stats(text, ctx)
     if not ctx.opts.keep_emails:

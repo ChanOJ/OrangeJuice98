@@ -50,8 +50,8 @@ plain HTML; the reverse-engineered data model is in [`docs/data-model.md`](docs/
   the full address; everything else is masked. Addresses kept whole are listed in `build-meta/kept-emails.txt`
   (`scripts/verify_build.py` allows exactly those), event and team addresses in `scripts/email-keep.txt`.
 - Phone numbers (BBS lists, a job ad, an old news item) keep their prefix; the last four digits are `?`.
-- The ICQ field of the handle sheets (label, pager link and presence badge, hosts long dead) and the legend of
-  its badges are removed.
+- ICQ: the UIN, its pager link and the "ICQ state :" label stay. The live presence badge (a dead host) is
+  replaced by the site's own grey flower (`pictures/icqdis.gif`), so no request goes to an ICQ server.
 - External links keep their original `href` (only counters, forms and the old search engine are gone) and
   open in a new tab (`target="_blank" rel="noopener"`), as many hosts refuse to be framed.
 - Links that were broken in the original are repaired (wrong paths, case, root pages that pointed outside the
