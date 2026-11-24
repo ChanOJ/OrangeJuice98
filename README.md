@@ -140,3 +140,13 @@ If the apply rejects an edge rule or the 404 path, set it by hand (CDN > pull zo
 3. *Edge rules*: condition *URL Extension* `htm`, `html`, `shtml` → *Set Response Header*
    `Content-Type: text/html; charset=iso-8859-1`.
 4. Storage > storage zone `orangejuice98` > *Error pages*: set the 404 file to `/404.html`.
+
+## To Do
+
+Cross-links to fix in a batch pass (the targets are archived on `sauthier.family`; rewrite the `href`s):
+
+- `ojuice.citeweb.net` (7 links in 7 files): original address of this site, point to the archive's own pages.
+- `www.citeweb.net` (26 links in 11 files) and `*.citeweb.net` member sites: Citeweb97 (https://citeweb97.sauthier.family), same paths.
+- `ribbon.citeweb.net` (16 links in 3 files): https://citeweb97.sauthier.family/ribbon/.
+- `ltp.planet-d.net` (10 links in 5 files): LTP3 (https://ltp3.sauthier.family).
+- `bomb.planet-d.net` (4 links in 4 files): Bomb98 (https://bomb98.sauthier.family).
