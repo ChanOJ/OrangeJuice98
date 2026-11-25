@@ -85,13 +85,13 @@ locals {
   # The menu jukebox (site/music, chiptune3 + libopenmpt) needs WebAssembly
   # ('wasm-unsafe-eval'), an AudioWorklet from the site itself, and fetches its
   # two .xm modules from the site (connect-src 'self').
-  # img-src keeps http:/https: only while legacy remote images remain in the
-  # pages (most hosts are dead; drop it if the build strips them).
+  # img-src: no http:// images remain (dead legacy ones were removed), so only
+  # https: remote images are allowed.
   csp = join("; ", [
     "default-src 'self'",
     "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'",
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: http: https:",
+    "img-src 'self' data: https:",
     "media-src 'self'",
     "font-src 'self'",
     "object-src 'none'",
